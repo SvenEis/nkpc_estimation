@@ -2,8 +2,8 @@
 import shutil
 
 import pytask
-from pytask_latex import compilation_steps as cs
 from nkpc_estimation.config import BLD, PAPER_DIR
+from pytask_latex import compilation_steps as cs
 
 documents = ["nkpc_estimation", "nkpc_estimation_pres"]
 

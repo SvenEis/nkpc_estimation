@@ -1,1 +1,1 @@
-"""Code for producing the results of the The New Keynesian Phillips Curve: An Empirical Assessment project."""
+"""Code for producing the results of the project."""

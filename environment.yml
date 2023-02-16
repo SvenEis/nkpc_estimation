@@ -1,9 +1,6 @@
 ---
 name: nkpc_estimation
-channels:
-  - conda-forge
-  - nodefaults
-
+channels: [conda-forge, nodefaults]
 dependencies:
   - conda-lock
   - ipykernel
@@ -25,6 +22,4 @@ dependencies:
   - setuptools_scm
   - statsmodels
   - toml
-  - pip:
-      - -e .
-      - kaleido
+  - pip: [-e ., kaleido]

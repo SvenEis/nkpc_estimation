@@ -2,8 +2,8 @@
 
 import pandas as pd
 import pytest
-from pandas.testing import assert_frame_equal
 from nkpc_estimation.analysis.predict import predict_prob_by_age
+from pandas.testing import assert_frame_equal
 
 
 @pytest.fixture()

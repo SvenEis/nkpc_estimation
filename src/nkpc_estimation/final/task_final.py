@@ -9,7 +9,6 @@ from nkpc_estimation.final import plot_regression_by_age
 from nkpc_estimation.utilities import read_yaml
 
 for group in GROUPS:
-
     kwargs = {
         "group": group,
         "depends_on": {"predictions": BLD / "python" / "predictions" / f"{group}.csv"},
