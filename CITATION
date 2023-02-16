@@ -1,0 +1,6 @@
+@Unpublished{nkpc_estimation2023,
+    Title  = {estimating the New Keynesian Phillips Curve using US data.},
+    Author = {Sven Eis},
+    Year   = {2023},
+    Url    = {https://github.com/SvenEis/nkpc_estimation}
+}
