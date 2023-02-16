@@ -1,15 +1,22 @@
 ---
-data_name: data.csv
-columns_to_drop:
-  - nationality
-  - ethnicity
-  - region
-  - amt_weekends
-  - amt_weekdays
-  - type
-  - gross_income
-categorical_columns: [gender, marital_status, highest_qualification, smoke]
+data_name:
+  - DP_LIVE_29012023114147131.csv
+  - DP_LIVE_29012023134946209.csv
+  - GDP.csv
+  - PRS85006173.csv
+  - sca-table32-on-2023-Feb-12.csv
+  - Quarterly_May2022.csv
+columns_to_keep:
+  - TIME
+  - Value
+  - Mean
+  - Year
+  - Quarter
+  - date
+  - noncyclical_rate_of_unemployment
+  - DATE
+  - GDP
+  - PRS85006173
 column_rename_mapping:
-  highest_qualification: qualification
-outcome: smoke
-outcome_numerical: smoke_numerical  # created during the clean_data step
+  CPI: Inflation
+  Emp: Unemployment
