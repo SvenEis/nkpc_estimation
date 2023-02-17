@@ -34,8 +34,6 @@ def load_data_files(data_files, dest_dir=None):
                 except:
                     break
             dataframes[file_name] = df
-        elif file_extension == ".xlsx":
-            dataframes[file_name] = pd.read_excel(file_path)
         elif file_extension == ".zip":
             assert (
                 dest_dir is not None
@@ -58,18 +56,16 @@ def load_data_files(data_files, dest_dir=None):
                             except:
                                 break
                         dataframes[file_name] = df
-                    elif inner_file_extension == ".xlsx":
-                        dataframes[file_name] = pd.read_excel(inner_file_path)
                     elif inner_file_extension == ".txt":
                         continue
                     else:
                         raise AssertionError(
-                            f"Unsupported file format in zip archive: {inner_file_extension}. Only .csv and .xlsx files are supported.",
+                            "Unsupported file format in zip archive: Only .csv files are supported.",
                         )
             zip_ref.close()
         else:
             raise AssertionError(
-                f"Unsupported file format: {file_extension}. Only .csv, .xlsx, and .zip files are supported.",
+                "Unsupported file format: Only .csv, and .zip files are supported.",
             )
     return dataframes
 

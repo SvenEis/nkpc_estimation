@@ -1,0 +1,4 @@
+---
+columns_to_keep: [col2]
+column_rename_mapping:
+  col1: column_1
