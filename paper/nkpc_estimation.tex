@@ -66,14 +66,14 @@
 \date{
     {\bf Preliminary -- please do not quote}
     \\[1ex]
-    \today
+    March 31, 2023
 }
 
 \maketitle
 
 
 \begin{abstract}
-    Some abstract here.
+    I estimate the forward looking New Keynesian Phillips curve using measures of marignal cost as well as an ad-hoc output gap, using quarterly US data from $1960-2022$.
 \end{abstract}
 
 \clearpage
@@ -82,54 +82,127 @@
 \section{Introduction} % (fold)
 \label{sec:introduction}
 
-If you are using this template, please cite this item from the references:
-\citet{GaudeckerEconProjectTemplates}.
+The project is build using the template from \citet{GaudeckerEconProjectTemplates}.
 
-The data set for the example project is taken from
-\url{https://www.stem.org.uk/resources/elibrary/resource/28452/large-datasets-stats4schools}.
-It contains data on smoking habits in the UK, with 1691 observations and 12 variables.
-We consider only 4 of the 12 features for the prediction of the variable
-\texttt{smoking}: \texttt{marital\_status}, \texttt{highest\_qualification},
-\texttt{gender} and \texttt{age}. We model the dependence using a Logistic model. All
-numerical features are included linearly, while categorical features are expanded into
-dummy variables. Figures below illustrate the model predictions over the lifetime. You
-will find one figure and one estimation summary table for each installed programming
-language.
+\textbf{Related Literature.} xxxx\\
+\\
+The paper is organized as follows: the next chapter \ref{theory} describes the theoretical background, chapter \ref{estimation} describes the econometric model, the estimation method and data, chapter \ref{results} presents the estimation results of the analysis, and discusses possible robustness checks, and chapter \ref{conclusion} provides a conclusion and addresses potential further research.
 
 
+%section introduction (end)
 
-\begin{figure}[H]
+\section{Theoretical Foundation} \label{theory}
+This research paper employs a basic model known as the Representative Agent New Keynesian (RANK) model as the baseline. The economy depicted in this model comprises a continuum of monopolistic intermediate-goods firms, a perfectly competitive final-goods firm, a perfectly competitive representative household, and a central bank that manages monetary policy. The forthcoming sections will elaborate on the objectives and constraints of the firm sector. For a comprehensive understanding of the model equations, including the household problem and monetary policy rule, please refer to Appendix \ref{sec:app:model}.
 
-    \centering
-    \includegraphics[width=0.85\textwidth]{../python/figures/smoking_by_marital_status}
+\subsection{Firms}
+\subsubsection{Final-Goods Firm}
+The final-goods firm is a representative, perfect competitive firm which uses intermediate goods as inputs for their production of the following good according to the following technology:
+\begin{equation}
+	Y_{t} = \left( \int_{0}^{1} Y_{t}(j)^{\frac{\epsilon -1}{\epsilon}} \,dj \right)^{\frac{\epsilon}{\epsilon -1}},
+\end{equation}
+where $Y_{t}(j)$ represents the intermediate good $j$, $Y_{t}$ the final good, and $\epsilon >1$ represents the constant price elasticity of demand.\\
+The firm maximizes its profits subject to (s.t.) the production function, taking intermediate-goods prices and the final-good price as given:
+\begin{equation*}
+	\begin{aligned}
+		\max_{Y_{t}(j)} \quad & P_{t}Y_{t} = \int_{0}^{1} P_{t}(j)Y_{t}(j) \,dj\\
+		\textrm{s.t.} \quad & Y_{t} = \left( \int_{0}^{1} Y_{t}(j)^{\frac{\epsilon -1}{\epsilon}} \,dj \right)^{\frac{\epsilon}{\epsilon -1}} \\
+	\end{aligned}
+\end{equation*}
+After maximizing the latter problem, one find the input demand function:
+\begin{equation}
+		Y_{t}(j) = \left( \frac{P_{t}(j)}{P_{t}} \right)^{- \epsilon} Y_{t},
+\end{equation}
+where $P_{t}(j)$ is the price for the intermediate good $j$ and $P_{t}$ is the price for the final good.
+As a reason of the zero profit condition, we get that:
+\begin{equation}
+		P_{t} = \left( \int_{0}^{1} P_{t}(j)^{1- \epsilon} \,dj \right)^{ \frac{1}{1- \epsilon}}
+\end{equation}
 
-    \caption{\emph{Python:} Model predictions of the smoking probability over the
-        lifetime. Each colored line represents a case where marital status is fixed to one
-        of the values present in the data set.}
-    \label{fig:python-predictions}
+\subsubsection{Intermediate-Goods Firms}
+There is a continuum of monopolistic firms $j \in [0,1]$ which produce differentiated intermediate goods. Each intermediate-goods firm has access to a technology represented by the following production function:
+\begin{equation}
+		Y_{t}(j) = A_{t}N_{t}(j)^{1- \alpha},
+\end{equation}
+where $A_{t}$ represents a common level of technology, $N_{t}(j)$ is labor, and $\alpha$ is the elasticity.\\
+Intermediate-goods firms take wage as given. Firms are not freely able to adjust prices. Following \citet{calvo1983staggered}, each firm may reset its price only with probability $1- \theta$ in any given period.
+Let $S(t) [0,1]$ represents the set of firms not reoptimizing their posted price in period t. The aggregate price level is:
+\begin{equation}
+	\begin{aligned}
+	P_{t} \quad & = \left[ \int_{S(t)}^{} P_{t-1}(i)^{1- \epsilon} di + (1- \theta) \left( P^{*}_{t} \right)^{1- \epsilon} \right]^{\frac{1}{1- \epsilon}}\\
+		\quad & = \left[ \theta \left( P_{t-1} \right)^{1- \epsilon} + \left(1- \theta \right) \left( P^{*}_{t} \right)^{1- \epsilon} \right]^{\frac{1}{1- \epsilon}}\\
+	\end{aligned}
+\end{equation}
+Dividing both sides by $P_{t-1}$:
+\begin{equation}
+	\Pi_{t}^{1- \epsilon} = \theta + (1- \theta) \left( \frac{P^{*}_{t}}{P_{t-1}} \right)^{1- \epsilon}
+\end{equation}
+Optimal Price Setting:
+\begin{equation}
+	max_{P_it}\sum_{K=0}^{\infty} \theta^{K} E_{t} \left\{ \Lambda_{t,t+K} Y_{t+K \mid t} \left[ \frac{P_{t}^{*}}{P_{t+K}}- M \frac{\psi_{t+K \mid t}}{P_{t+K}} \right] \right\} = 0
+\end{equation}
+The latter optimization problem leads to the following first order condition (FOC):
+\begin{equation}
+	\sum_{K=0}^{\infty} \theta^{K} E_{t} \left\{ \Lambda_{t,t+K} Y_{t+K \mid t} \left[ \frac{P_{t}^{*}}{P_{t+K}}- M \frac{\psi_{t+K \mid t}}{P_{t+K}} \right] \right\} = 0
+\end{equation}
 
-\end{figure}
+Log-linearization the latter FOC yields to:
+
+\subsection{The New Keynesian Phillips Curve}
+As stated above the New Keynesian Phillips Curve (NKPC) in terms of markup cap is the following:
+\begin{equation} \label{NKPCmu}
+	\pi_{t} = \beta E_{t} \left\{ \pi_{t+1} \right\} - \lambda \hat{\mu}_{t},
+\end{equation}
+where $\hat{\mu}_{t}= \mu_{t}-\mu$ is the steady state deviation of the markup.
+One can rewrite the NKPC in terms of the output gap using the log-linearized expression for the average real marginal cost $mc_{t} = w_{t} - p_{t} - mpn_{t} $. This yields into the following expression, where the log deviation of real marginal cost from steady state is proportional to the log deviation of output from its flexible price counterpart:
+\begin{equation}
+	\hat{\mu}_{t}= \left[ \sigma + \frac{\phi + \alpha}{1- \alpha} \right] \left( y_{t} - y_{t}^{n} \right)
+\end{equation}
+By combining this with equation \ref{NKPCmu} yields to the following NKPC in terms of the output gap:
+\begin{equation}  \label{NKPCygap}
+	\pi_{t} = \beta E_{t} \left\{ \pi_{t+1} \right\} + \kappa \widetilde{y}_{t},
+\end{equation}
+where $\kappa \equiv \lambda \left[ \sigma + \frac{\phi + \alpha}{1- \alpha} \right] $.
 
 
+\section{Estimation and Data} \label{estimation}
+\subsection{Estimation}
+\subsubsection{Coibion and Gorodnichenko (2015)}
+OLS Regression
+
+\subsubsection{Gali and Gertler (1999)}
+
+\subsection{Data}
+For the estimation I use quarterly US data from $1960Q1-2022Q4$.
+
+\section{Results and Robustness Checks} \label{results}
+\subsection{Results}
 \begin{table}[!h]
-    \input{../python/tables/estimation_results.tex}
+    \input{../bld/python/tables/estimation_results.tex}
     \caption{\label{tab:python-summary}\emph{Python:} Estimation results of the
         linear Logistic regression.}
 \end{table}
 
+\subsection{Robustness Checks}
 
 
-
-% section introduction (end)
-
-
+\section{Conclusion} \label{conclusion}
 
 \setstretch{1}
 \printbibliography
 \setstretch{1.5}
 
 
-% \appendix
+\appendix
+
+\begin{figure}[H]
+
+    \centering
+    \includegraphics[width=0.85\textwidth]{../bld/python/figures/MSC_Labor_share.pdf}
+
+    \caption{\emph{Python:} Regression plot.}
+    \label{fig:python-predictions}
+
+\end{figure}
 
 % The chngctr package is needed for the following lines.
 % \counterwithin{table}{section}
