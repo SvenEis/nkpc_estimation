@@ -3,44 +3,43 @@
 import pandas as pd
 import pytask
 
-from nkpc_estimation.analysis.model import fit_logit_model, load_model
-from nkpc_estimation.analysis.predict import predict_prob_by_age
-from nkpc_estimation.config import BLD, GROUPS, SRC
-from nkpc_estimation.utilities import read_yaml
+from nkpc_estimation.analysis.model import fit_model
+from nkpc_estimation.config import BLD
 
 
 @pytask.mark.depends_on(
     {
-        "scripts": ["model.py", "predict.py"],
+        "scripts": ["model.py"],
         "data": BLD / "python" / "data" / "data_clean.csv",
-        "data_info": SRC / "data_management" / "data_info.yaml",
     },
 )
-@pytask.mark.produces(BLD / "python" / "models" / "model.pickle")
+@pytask.mark.produces(BLD / "python" / "models")
 def task_fit_model_python(depends_on, produces):
-    """Fit a logistic regression model (Python version)."""
-    data_info = read_yaml(depends_on["data_info"])
+    """Fit a OLS regression model.
+
+    Args:
+        depends_on (dict): Dependencies for the pytask function.
+        produces (Path): Path where the outcome is saved.
+
+    Returns:
+        Pickle: Saves pickle files in the produces path.
+
+    """
     data = pd.read_csv(depends_on["data"])
-    model = fit_logit_model(data, data_info, model_type="linear")
-    model.save(produces)
-
-
-for group in GROUPS:
-    kwargs = {
-        "group": group,
-        "produces": BLD / "python" / "predictions" / f"{group}.csv",
+    outcome_vars = {
+        "BackExp": data["Inflation"] - data["Backward_Expectations_Inflation"],
+        "MSC": data["Inflation"] - data["MSC"],
     }
-
-    @pytask.mark.depends_on(
-        {
-            "data": BLD / "python" / "data" / "data_clean.csv",
-            "model": BLD / "python" / "models" / "model.pickle",
-        },
-    )
-    @pytask.mark.task(id=group, kwargs=kwargs)
-    def task_predict_python(depends_on, group, produces):
-        """Predict based on the model estimates (Python version)."""
-        model = load_model(depends_on["model"])
-        data = pd.read_csv(depends_on["data"])
-        predicted_prob = predict_prob_by_age(data, model, group)
-        predicted_prob.to_csv(produces, index=False)
+    feature_vars = {
+        "Unemp": data["Unemployment"],
+        "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
+        "Labor_share": data["Labor_share"],
+    }
+    model_types = ["OLS"]
+    for outcome_name, outcome_var in outcome_vars.items():
+        for feature_name, feature_list in feature_vars.items():
+            for model_type in model_types:
+                model = fit_model(outcome_var, feature_list, model_type)
+                model.save(
+                    produces / f"{outcome_name}_{feature_name}_{model_type}.pickle",
+                )

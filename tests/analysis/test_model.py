@@ -3,34 +3,43 @@
 import numpy as np
 import pandas as pd
 import pytest
-from nkpc_estimation.analysis.model import fit_logit_model
+import statsmodels.api as sm
+from nkpc_estimation.analysis.model import fit_model
 
 DESIRED_PRECISION = 10e-2
 
 
 @pytest.fixture()
-def data():
-    np.random.seed(0)
-    x = np.random.normal(size=100_000)
-    coef = 2.0
-    prob = 1 / (1 + np.exp(-coef * x))
-    return pd.DataFrame(
-        {"outcome_numerical": np.random.binomial(1, prob), "covariate": x},
+def random_data():
+    np.random.seed(123)
+    n = 100
+    outcome = np.random.normal(size=n)
+    features = np.random.normal(size=(n, 3))
+    data = pd.DataFrame(
+        {
+            "outcome": outcome,
+            "feature1": features[:, 0],
+            "feature2": features[:, 1],
+            "feature3": features[:, 2],
+        },
     )
+    return data
 
 
-@pytest.fixture()
-def data_info():
-    return {"outcome": "outcome", "outcome_numerical": "outcome_numerical"}
+def test_fit_model_OLS(random_data):
+    """Tests if result is a 'RegressionResultsWrapper' object with non-zero degrees of
+    freedom and correct number of parameters."""
+    outcome_var = random_data["outcome"]
+    feature_vars = random_data[["feature1", "feature2", "feature3"]]
+    model = fit_model(outcome_var, feature_vars, "OLS")
+    assert isinstance(model, sm.regression.linear_model.RegressionResultsWrapper)
+    assert model.df_resid > 0
+    assert len(model.params) == feature_vars.shape[1]
 
 
-def test_fit_logit_model_recover_coefficients(data, data_info):
-    model = fit_logit_model(data, data_info, model_type="linear")
-    params = model.params
-    assert np.abs(params["Intercept"]) < DESIRED_PRECISION
-    assert np.abs(params["covariate"] - 2.0) < DESIRED_PRECISION
-
-
-def test_fit_logit_model_error_model_type(data, data_info):
-    with pytest.raises(ValueError):  # noqa: PT011
-        assert fit_logit_model(data, data_info, model_type="quadratic")
+def test_fit_model_error_model_type(random_data):
+    """Tests if ValueError is raised with incorrect 'model_type'."""
+    outcome_var = random_data["outcome"]
+    feature_vars = random_data[["feature1", "feature2", "feature3"]]
+    with pytest.raises(ValueError):
+        assert fit_model(outcome_var, feature_vars, "quadratic")
