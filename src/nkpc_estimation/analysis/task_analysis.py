@@ -3,43 +3,53 @@
 import pandas as pd
 import pytask
 
+from nkpc_estimation.analysis.config import ESTIMATIONS, path_to_estimation_result
 from nkpc_estimation.analysis.model import fit_model
 from nkpc_estimation.config import BLD
 
 
-@pytask.mark.depends_on(
-    {
-        "scripts": ["model.py"],
-        "data": BLD / "python" / "data" / "data_clean.csv",
-    },
-)
-@pytask.mark.produces(BLD / "python" / "models")
-def task_fit_model_python(depends_on, produces):
-    """Fit a OLS regression model.
+def _create_parametrization(estimations):
+    id_to_kwargs = {}
+    depends_on = BLD / "python" / "data" / "data_clean.csv"
+    for name, config in estimations.items():
+        produces = path_to_estimation_result(config["data"], config["model"])
+        id_to_kwargs[name] = {
+            "depends_on": depends_on,
+            "model": config["model"],
+            "produces": produces,
+        }
 
-    Args:
-        depends_on (dict): Dependencies for the pytask function.
-        produces (Path): Path where the outcome is saved.
+    return id_to_kwargs
 
-    Returns:
-        Pickle: Saves pickle files in the produces path.
 
-    """
-    data = pd.read_csv(depends_on["data"])
-    outcome_vars = {
-        "BackExp": data["Inflation"] - data["Backward_Expectations_Inflation"],
-        "MSC": data["Inflation"] - data["MSC"],
-    }
-    feature_vars = {
-        "Unemp": data["Unemployment"],
-        "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
-        "Labor_share": data["Labor_share"],
-    }
-    model_types = ["OLS"]
-    for outcome_name, outcome_var in outcome_vars.items():
-        for feature_name, feature_list in feature_vars.items():
-            for model_type in model_types:
-                model = fit_model(outcome_var, feature_list, model_type)
-                model.save(
-                    produces / f"{outcome_name}_{feature_name}_{model_type}.pickle",
-                )
+_ID_TO_KWARGS = _create_parametrization(ESTIMATIONS)
+
+for id_, kwargs in _ID_TO_KWARGS.items():
+
+    @pytask.mark.task(id=id_, kwargs=kwargs)
+    def task_fit_model_python(depends_on, model, produces):
+        """Fit a OLS regression model.
+
+        Args:
+            depends_on (dict): Dependencies for the pytask function.
+            produces (Path): Path where the outcome is saved.
+
+        Returns:
+            Pickle: Saves pickle files in the produces path.
+
+        """
+        data = pd.read_csv(depends_on)
+        if model == "OLS":
+            outcome_vars = {
+                "BackExp": data["Inflation"] - data["Backward_Expectations_Inflation"],
+                "MSC": data["Inflation"] - data["MSC"],
+            }
+            feature_vars = {
+                "Unemp": data["Unemployment"],
+                "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
+                "Labor_share": data["Labor_share"],
+            }
+            for outcome_var in outcome_vars.values():
+                for feature_list in feature_vars.values():
+                    model = fit_model(outcome_var, feature_list, model_type="OLS")
+                    model.save(produces)

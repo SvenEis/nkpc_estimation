@@ -20,7 +20,7 @@ def fit_model(outcome_variable, feature_variables, model_type):
     if model_type == "OLS":
         model = sm.OLS(outcome_variable, feature_variables).fit()
     else:
-        message = "Only 'OLS' model_type is supported."
+        message = "Only 'OLS' or 'IV' model_type is supported."
         raise ValueError(message)
 
     return model
