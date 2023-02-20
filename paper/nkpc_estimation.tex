@@ -34,7 +34,7 @@
 \AtBeginDocument{\toggletrue{blx@useprefix}}
 \AtBeginBibliography{\togglefalse{blx@useprefix}}
 \setlength{\bibitemsep}{1.5ex}
-\addbibresource{../../paper/refs.bib}
+\addbibresource{../paper/refs.bib}
 
 \usepackage[unicode=true]{hyperref}
 \hypersetup{
@@ -81,21 +81,20 @@
 
 \section{Introduction} % (fold)
 \label{sec:introduction}
+Over the past few decades, the New Keynesian Phillips Curve (NKPC) has become a cornerstone of macroeconomic models used by central banks and policymakers. The NKPC relates inflation to real marginal cost, which is typically modeled as a function of the output gap, defined as the deviation of actual output from natural level of output. Empirical estimates of the NKPC have been widely used to guide monetary policy, but the stability of the curve has been the subject of much debate in recent years.
+This paper aims to estimate the NKPC for the US economy using quarterly data from 1960 to 2022. I build on the works of \citet{gali1999inflation} and \citet{coibion2015phillips} to provide a comprehensive analysis of the determinants of inflation dynamics in the US.
+I use a similar econometric approach as \citet{gali1999inflation} to estimate the NKPC, but I also incorporate the insights from \citet{coibion2015phillips} to test whether the Phillips curve is still a reliable guide for monetary policy. Specifically, I investigate the impact of inflation expectations on the dynamics of inflation and test whether the Phillips curve has become flatter over time.
 
-The project is build using the template from \citet{GaudeckerEconProjectTemplates}.
+\textbf{Related Literature.} Gali and Gertler (1999) introduced a structural econometric approach to estimate the NKPC, which has been widely adopted in the literature. Coibion and Gorodnichenko (2015) challenged the stability of the Phillips curve, arguing that it has become flatter over time due to the anchoring of inflation expectations.
 
-\textbf{Related Literature.} xxxx\\
-\\
-The paper is organized as follows: the next chapter \ref{theory} describes the theoretical background, chapter \ref{estimation} describes the econometric model, the estimation method and data, chapter \ref{results} presents the estimation results of the analysis, and discusses possible robustness checks, and chapter \ref{conclusion} provides a conclusion and addresses potential further research.
+The paper is organized as follows: the next chapter \ref{theory} describes the theoretical background, chapter \ref{estimation} describes the econometric model, the estimation method and data, chapter \ref{results} presents the estimation results of the analysis, and discusses possible robustness checks, and chapter \ref{conclusion} provides a conclusion and addresses potential further research. The project is build using the template from \citet{GaudeckerEconProjectTemplates}.
 
 
 %section introduction (end)
 
 \section{Theoretical Foundation} \label{theory}
-This research paper employs a basic model known as the Representative Agent New Keynesian (RANK) model as the baseline. The economy depicted in this model comprises a continuum of monopolistic intermediate-goods firms, a perfectly competitive final-goods firm, a perfectly competitive representative household, and a central bank that manages monetary policy. The forthcoming sections will elaborate on the objectives and constraints of the firm sector. For a comprehensive understanding of the model equations, including the household problem and monetary policy rule, please refer to Appendix \ref{sec:app:model}.
-
-\subsection{Firms}
-\subsubsection{Final-Goods Firm}
+The baseline model utilized in this research paper is the Representative Agent New Keynesian (RANK) model. This economic model consists of a continuum of monopolistic intermediate-goods firms, a perfectly competitive final-goods firm, a perfectly competitive representative household, and a central bank responsible for managing monetary policy. The upcoming sections of this paper will provide a detailed explanation of the objectives and constraints of the firm sector. For a complete understanding of the model equations, including the household problem and monetary policy rule, please refer to Appendix \ref{sec:app:model}.
+\subsection{Final-Goods Firm}
 The final-goods firm is a representative, perfect competitive firm which uses intermediate goods as inputs for their production of the following good according to the following technology:
 \begin{equation}
 	Y_{t} = \left( \int_{0}^{1} Y_{t}(j)^{\frac{\epsilon -1}{\epsilon}} \,dj \right)^{\frac{\epsilon}{\epsilon -1}},
@@ -118,46 +117,49 @@ As a reason of the zero profit condition, we get that:
 		P_{t} = \left( \int_{0}^{1} P_{t}(j)^{1- \epsilon} \,dj \right)^{ \frac{1}{1- \epsilon}}
 \end{equation}
 
-\subsubsection{Intermediate-Goods Firms}
-There is a continuum of monopolistic firms $j \in [0,1]$ which produce differentiated intermediate goods. Each intermediate-goods firm has access to a technology represented by the following production function:
+\subsection{Intermediate-Goods Firms}
+Within the model, there exists a continuous range of monopolistic firms, indexed by $j \in [0,1]$, each of which produce differentiated intermediate goods. These intermediate-goods firms are equipped with a production function that can be represented as follows:
 \begin{equation}
 		Y_{t}(j) = A_{t}N_{t}(j)^{1- \alpha},
 \end{equation}
-where $A_{t}$ represents a common level of technology, $N_{t}(j)$ is labor, and $\alpha$ is the elasticity.\\
-Intermediate-goods firms take wage as given. Firms are not freely able to adjust prices. Following \citet{calvo1983staggered}, each firm may reset its price only with probability $1- \theta$ in any given period.
-Let $S(t) [0,1]$ represents the set of firms not reoptimizing their posted price in period t. The aggregate price level is:
+where $A_{t}$ denotes a common level of technology, $N_{t}(j)$ stands for labor, and $\alpha$ represents the associated elasticity.\\
+Notably, wage levels are taken as given by the intermediate-goods firms, which are not able to freely adjust prices. Instead, following the work of \citet{calvo1983staggered}, each firm has the ability to reset its price only with a probability of $1- \theta$ during a given period. Let $S(t) \in [0,1]$ denote the set of firms that do not re-optimize their posted prices in period $t$. The resulting aggregate price level can then be expressed as follows:
 \begin{equation}
 	\begin{aligned}
 	P_{t} \quad & = \left[ \int_{S(t)}^{} P_{t-1}(i)^{1- \epsilon} di + (1- \theta) \left( P^{*}_{t} \right)^{1- \epsilon} \right]^{\frac{1}{1- \epsilon}}\\
 		\quad & = \left[ \theta \left( P_{t-1} \right)^{1- \epsilon} + \left(1- \theta \right) \left( P^{*}_{t} \right)^{1- \epsilon} \right]^{\frac{1}{1- \epsilon}}\\
 	\end{aligned}
 \end{equation}
-Dividing both sides by $P_{t-1}$:
-\begin{equation}
-	\Pi_{t}^{1- \epsilon} = \theta + (1- \theta) \left( \frac{P^{*}_{t}}{P_{t-1}} \right)^{1- \epsilon}
+As $P_{t}$ may be non-stationary, and in order to perform a log-linearization around a stationary point, it is necessary to raise both sides of the equation to the power of $1- \epsilon$ and divide both sides by $P_{t-1}$. This allows me to continue my analysis using inflation, $\pi_{t}$, as follows:
+\begin{equation} \label{pi}
+	\pi_{t}^{1- \epsilon} = \theta + (1- \theta) \left( \frac{P^{*}_{t}}{P_{t-1}} \right)^{1- \epsilon}
 \end{equation}
-Optimal Price Setting:
+Performing a log-linearization of equation \ref{pi} around $0$ results in the following expression:
 \begin{equation}
-	max_{P_it}\sum_{K=0}^{\infty} \theta^{K} E_{t} \left\{ \Lambda_{t,t+K} Y_{t+K \mid t} \left[ \frac{P_{t}^{*}}{P_{t+K}}- M \frac{\psi_{t+K \mid t}}{P_{t+K}} \right] \right\} = 0
+	p_{t} = \theta p_{t-1} \left( 1- \theta \right) p^{*}_{t}
 \end{equation}
-The latter optimization problem leads to the following first order condition (FOC):
+The dynamic optimization problem faced by the firm for determining the optimal price setting can be expressed as follows:
 \begin{equation}
-	\sum_{K=0}^{\infty} \theta^{K} E_{t} \left\{ \Lambda_{t,t+K} Y_{t+K \mid t} \left[ \frac{P_{t}^{*}}{P_{t+K}}- M \frac{\psi_{t+K \mid t}}{P_{t+K}} \right] \right\} = 0
+	\begin{aligned}
+	\max_{P^{*}_{t}}  \quad & \sum_{K=0}^{\infty} \theta^{K} E_{t} \left\{ \frac{\Lambda_{t,t+K}}{P_{t+K}} \left[ P_{t}^{*} Y_{t+K \mid t} - \Psi \left( Y_{t+K \mid t} \right) \right] \right\} \\
+	\textrm{s.t.} \quad & Y_{t+K \mid t} = \left( \frac{P^{*}_{t}}{P_{t+K}} \right) Y_{t+K} \\
+	\end{aligned}
 \end{equation}
-
-Log-linearization the latter FOC yields to:
-
+By taking the first-order condition (FOC) and subsequently performing a log-linearization, we arrive at the following expression:
+\begin{equation} \label{pstar}
+	p^{*}_{t} = \mu + \left(1-\beta \theta \right) \sum_{K=0}^{\infty} \left(\theta \beta \right)^{K} E_{t} \psi_{t+K \mid t},
+\end{equation}
+where $\psi_{t+K \mid t}=\Psi^{'}_{t+K \mid t}$ is the nominal marginal cost.
 \subsection{The New Keynesian Phillips Curve}
-As stated above the New Keynesian Phillips Curve (NKPC) in terms of markup cap is the following:
+In order to derive the New Keynesian Phillips Curve (NKPC), it is necessary to rearrange equation \ref{pstar}. A thorough explanation of the derivation can be found in Appendix \ref{sec:app:model}. The resulting expression for the NKPC, in terms of the markup gap, is as follows:
 \begin{equation} \label{NKPCmu}
 	\pi_{t} = \beta E_{t} \left\{ \pi_{t+1} \right\} - \lambda \hat{\mu}_{t},
 \end{equation}
-where $\hat{\mu}_{t}= \mu_{t}-\mu$ is the steady state deviation of the markup.
-One can rewrite the NKPC in terms of the output gap using the log-linearized expression for the average real marginal cost $mc_{t} = w_{t} - p_{t} - mpn_{t} $. This yields into the following expression, where the log deviation of real marginal cost from steady state is proportional to the log deviation of output from its flexible price counterpart:
+where $\hat{\mu}_{t}= \mu_{t}-\mu$ represents the deviation of the markup from its steady state level. By utilizing the log-linearized form of the average real marginal cost, expressed as $mc_{t} = w_{t} - p_{t} - mpn_{t} $, the NKPC can be alternatively presented in terms of the output gap. This results in the following equation, where the logarithmic deviation of the real marginal cost from its steady state level is proportionate to the logarithmic deviation of the output from its flexible price equivalent:
 \begin{equation}
 	\hat{\mu}_{t}= \left[ \sigma + \frac{\phi + \alpha}{1- \alpha} \right] \left( y_{t} - y_{t}^{n} \right)
 \end{equation}
-By combining this with equation \ref{NKPCmu} yields to the following NKPC in terms of the output gap:
+Combining this with equation \ref{NKPCmu} results in the following expression for the NKPC in terms of the output gap:
 \begin{equation}  \label{NKPCygap}
 	\pi_{t} = \beta E_{t} \left\{ \pi_{t+1} \right\} + \kappa \widetilde{y}_{t},
 \end{equation}
@@ -176,33 +178,53 @@ For the estimation I use quarterly US data from $1960Q1-2022Q4$.
 
 \section{Results and Robustness Checks} \label{results}
 \subsection{Results}
-\begin{table}[!h]
-    \input{../bld/python/tables/estimation_results.tex}
-    \caption{\label{tab:python-summary}\emph{Python:} Estimation results of the
-        linear Logistic regression.}
-\end{table}
+%\begin{table}[!h]
+%    \input{../bld/python/tables/MSC_Unemp_OLS.tex}
+%    \caption{\label{tab:python-summary}\emph{Python:} Estimation results of the
+%        linear Logistic regression.}
+%\end{table}
+
+%\begin{figure}[H]
+
+ %   \centering
+ %   \includegraphics[width=0.85\textwidth]{../bld/python/figures/MSC_Labor_share.pdf}
+
+ %   \caption{\emph{Python:} Regression plot.}
+ %   \label{fig:python-predictions}
+
+%\end{figure}
 
 \subsection{Robustness Checks}
 
 
 \section{Conclusion} \label{conclusion}
 
+\clearpage
+
 \setstretch{1}
 \printbibliography
 \setstretch{1.5}
 
+\clearpage
 
+\section*{\Huge Appendix}
 \appendix
+\setcounter{equation}{0}
+\numberwithin{equation}{section}
+\section{RANK model}
+\subsection{Households}
+In the model, I posit the existence of a continuum of a representitive perfectly competitive household maximising its expected lifetime utility $U \left( C_{t},N_{t} \right)$ at period $t = 0$. Consumers minimise expenditure given the consumption level of composite good $C_{t}$. Moreover, I assume a standard constant relative risk aversion (CRRA) functional form of additively separable consumption and labor:
+\begin{equation}
+    Unemp
+\end{equation}
 
-\begin{figure}[H]
+\subsection{Firms}
 
-    \centering
-    \includegraphics[width=0.85\textwidth]{../bld/python/figures/MSC_Labor_share.pdf}
+\subsection{Monetary Policy}
 
-    \caption{\emph{Python:} Regression plot.}
-    \label{fig:python-predictions}
+\subsection{Market Clearing}
 
-\end{figure}
+
 
 % The chngctr package is needed for the following lines.
 % \counterwithin{table}{section}
