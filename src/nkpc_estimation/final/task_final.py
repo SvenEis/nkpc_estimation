@@ -52,25 +52,29 @@ for id_, kwargs in _ID_TO_KWARGS.items():
             "MSC": "$\\pi_{t}- E \\pi^{MSC}_{t}$",
         }
 
-        for outcome_var in outcome_vars.values():
-            for feature_list in feature_vars.values():
-                for xaxis_title in xaxis_titles.values():
-                    for yaxis_title in yaxis_titles.values():
-                        fig = plot_regression(
-                            data,
-                            feature_list,
-                            outcome_var,
-                            xaxis_title,
-                            yaxis_title,
-                        )
-                        fig.write_image(produces)
+        for outcome_name, outcome_var in outcome_vars.items():
+            for feature_name, feature_list in feature_vars.items():
+                xaxis_title = xaxis_titles[feature_name]
+                yaxis_title = yaxis_titles[outcome_name]
+                fig = plot_regression(
+                    data,
+                    feature_list,
+                    outcome_var,
+                    xaxis_title,
+                    yaxis_title,
+                )
+                fig.write_image(f"{produces.parent}/{outcome_name}_{feature_name}.pdf")
 
 
 def _create_table_parametrization(tables):
     id_to_kwargs = {}
     for name, config in tables.items():
-        depends_on = path_to_estimation_result(config["data"], config["model"])
-        produces = path_to_tables(config["data"], config["model"])
+        depends_on = path_to_estimation_result(
+            config["outcome"],
+            config["feature"],
+            config["model"],
+        )
+        produces = path_to_tables(config["outcome"], config["feature"], config["model"])
         id_to_kwargs[name] = {
             "depends_on": depends_on,
             "model": config["model"],

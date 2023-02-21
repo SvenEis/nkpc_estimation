@@ -17,7 +17,8 @@ def path_to_plots(outcome_name, feature_name):
 TABLES = {
     f"{outcome_name}_{feature_name}_{model_name}": {
         "model": model_name,
-        "data": [outcome_name, feature_name],
+        "outcome": outcome_name,
+        "feature": feature_name,
     }
     for model_name in _MODELS
     for outcome_name in _OUTCOME
@@ -25,5 +26,5 @@ TABLES = {
 }
 
 
-def path_to_tables(data, model_type):
-    return BLD / "python" / "tables" / f"{data}_{model_type}.tex"
+def path_to_tables(outcome_name, feature_name, model_type):
+    return BLD / "python" / "tables" / f"{outcome_name}_{feature_name}_{model_type}.tex"

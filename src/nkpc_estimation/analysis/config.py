@@ -9,7 +9,8 @@ _FEATURE = ["Unemp", "Unemp_Gap", "Labor_share"]
 ESTIMATIONS = {
     f"{outcome_name}_{feature_name}_{model_name}": {
         "model": model_name,
-        "data": [outcome_name, feature_name],
+        "outcome": outcome_name,
+        "feature": feature_name,
     }
     for model_name in _MODELS
     for outcome_name in _OUTCOME
@@ -17,5 +18,7 @@ ESTIMATIONS = {
 }
 
 
-def path_to_estimation_result(data, model_type):
-    return BLD / "python" / "models" / f"{data}_{model_type}.pickle"
+def path_to_estimation_result(outcome_name, feature_name, model_type):
+    return (
+        BLD / "python" / "models" / f"{outcome_name}_{feature_name}_{model_type}.pickle"
+    )
