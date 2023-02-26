@@ -21,7 +21,7 @@ from nkpc_estimation.utilities import read_yaml
         "data": {
             "CPI": SRC / "data" / "DP_LIVE_29012023114147131.csv",
             "Emp": SRC / "data" / "DP_LIVE_29012023134946209.csv",
-            "NAIRU": SRC / "data" / "55022-2022-05-Historical-Economic-Data.zip",
+            "NAIRU": SRC / "data" / "55022-2023-02-Historical-Economic-Data.zip",
             "MSC": SRC / "data" / "sca-table32-on-2023-Feb-12.csv",
             "GDP": SRC / "data" / "GDP.csv",
             "Labor_share": SRC / "data" / "PRS85006173.csv",
