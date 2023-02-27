@@ -1,5 +1,6 @@
 """Test python script."""
 
+import numpy as np
 import pandas as pd
 import pytest
 from nkpc_estimation.config import TEST_DIR
@@ -7,9 +8,11 @@ from nkpc_estimation.data_management.clean_data import (
     calculateDeTrend,
     calculateExpectations,
     calculateGrowthRate,
+    clean_data,
     load_data_files,
     merge_data,
 )
+from nkpc_estimation.utilities import read_yaml
 
 
 def test_load_csv_files():
@@ -174,3 +177,45 @@ def test_calculateExpectations(example_data):
     assert result[expected_column_name].tolist() == expected_values
     ##
     assert result.shape == (1, 3)
+
+
+def test_clean_data(tmp_path):
+    dfs = {
+        "GDP": TEST_DIR / "data_management" / "sample_data" / "data_fixture.csv",
+        "NAIRU": TEST_DIR / "data_management" / "sample_data" / "data_fixture.zip",
+    }
+    data_info = read_yaml(
+        TEST_DIR / "data_management" / "sample_data" / "data_info_fixture.yaml",
+    )
+    dfs = load_data_files(
+        data_files=dfs,
+        dest_dir=tmp_path,
+    )
+    cleaned_data_dict = clean_data(dfs, data_info)
+    # Check that data is cleaned as expected
+    assert isinstance(cleaned_data_dict, dict)
+    assert len(cleaned_data_dict) == len(dfs)
+    assert all([key in cleaned_data_dict for key in dfs])
+    for key, _df in cleaned_data_dict.items():
+        assert isinstance(cleaned_data_dict[key]["TIME"][0], pd.Timestamp)
+        assert all(cleaned_data_dict["GDP"]["GDP"] == np.log(dfs["GDP"]["GDP"]))
+
+
+def test_merge_data(tmp_path):
+    dfs = {
+        "GDP": TEST_DIR / "data_management" / "sample_data" / "data_fixture.csv",
+        "Emp": TEST_DIR / "data_management" / "sample_data" / "data_fixture.zip",
+    }
+    data_info = read_yaml(
+        TEST_DIR / "data_management" / "sample_data" / "data_info_fixture.yaml",
+    )
+    dfs = load_data_files(
+        data_files=dfs,
+        dest_dir=tmp_path,
+    )
+    cleaned_data = clean_data(dfs, data_info)
+    merged_data = merge_data(cleaned_data, index="TIME")
+    assert isinstance(merged_data, pd.DataFrame)
+    assert merged_data.index.name == "TIME"
+    for col in dfs:
+        assert col in merged_data.columns
