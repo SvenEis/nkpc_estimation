@@ -6,17 +6,13 @@ data_name:
   - PRS85006173.csv
   - sca-table32-on-2023-Feb-12.csv
   - Quarterly_Feb2023.csv
-columns_to_keep:
-  - TIME
+variables_to_keep:
   - Value
   - Mean
-  - Year
-  - Quarter
-  - date
   - noncyclical_rate_of_unemployment
-  - DATE
   - GDP
   - PRS85006173
+dates_to_keep: [TIME, Year, Quarter, date, DATE]
 column_rename_mapping:
   CPI: Inflation
   Emp: Unemployment

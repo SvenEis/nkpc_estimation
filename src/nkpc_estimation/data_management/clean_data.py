@@ -71,15 +71,14 @@ def load_data_files(data_files, dest_dir=None):
 
 
 def clean_data(data, data_info):
-    """Clean data set.
-
-    Information on data columns is stored in ``data_management/data_info.yaml``.
+    """Clean data set. Information on data columns is stored in
+    ``data_management/data_info.yaml``.
 
     Args:
         data (pandas.DataFrame): The data set.
         data_info (dict): Information on data set stored in data_info.yaml. The
             following keys can be accessed:
-            - 'columns_to_keep': Names of columns that are keeped in data cleaning step
+            - 'variables_to_keep': Names of columns that are keeped in data cleaning step
             - 'column_rename_mapping': Old and new names of columns to be renamend,
                 stored in a dictionary with design: {'old_name': 'new_name'}
 
@@ -87,38 +86,31 @@ def clean_data(data, data_info):
         pandas.DataFrame: The cleaned data sets in a dictionary.
 
     """
+    combined_cols = data_info["variables_to_keep"].copy()
+    combined_cols.extend(data_info["dates_to_keep"])
+
     df_dict = {
-        df_name: df[df.columns.intersection(data_info["columns_to_keep"])]
+        df_name: df[df.columns.intersection(combined_cols)]
         for df_name, df in data.items()
     }
 
     for key, _value in df_dict.items():
-        df_dict[key] = df_dict[key].rename(
-            columns={
-                "Value": key,
-                "Mean": key,
-                "noncyclical_rate_of_unemployment": key,
-                "GDP": key,
-                "PRS85006173": key,
-            },
-        )
-        if key in ("CPI", "Emp"):
-            df_dict[key]["TIME"] = pd.to_datetime(df_dict[key]["TIME"])
-        elif key in ("GDP", "Labor_share"):
-            df_dict[key]["TIME"] = pd.to_datetime(df_dict[key]["DATE"])
-            df_dict[key] = df_dict[key].drop(["DATE"], axis=1)
+        rename_dict = {col: key for col in data_info["variables_to_keep"]}
+        df_dict[key] = _value.rename(columns=rename_dict)
+        for date_col in data_info["dates_to_keep"]:
+            if (date_col in _value.columns) and date_col in ("DATE", "date"):
+                df_dict[key]["TIME"] = df_dict[key].pop(date_col).apply(pd.to_datetime)
+            elif (date_col in _value.columns) and date_col == "TIME":
+                df_dict[key]["TIME"] = pd.to_datetime(df_dict[key][date_col])
+            elif date_col == "Quarter" and (date_col in _value.columns):
+                df_dict[key]["TIME"] = pd.to_datetime(
+                    df_dict[key]["Year"].astype(str)
+                    + "Q"
+                    + df_dict[key]["Quarter"].astype(str),
+                )
+                df_dict[key] = df_dict[key].drop(["Year", "Quarter"], axis=1)
+        if key in ("GDP", "Labor_share"):
             df_dict[key][key] = np.log(df_dict[key][key])
-        elif key == "NAIRU":
-            df_dict[key]["TIME"] = pd.to_datetime(df_dict[key]["date"])
-            df_dict[key] = df_dict[key].drop(["date"], axis=1)
-        elif key == "MSC":
-            df_dict[key]["TIME"] = pd.to_datetime(
-                df_dict[key]["Year"].astype(str)
-                + "Q"
-                + df_dict[key]["Quarter"].astype(str),
-            )
-            df_dict[key] = df_dict[key].drop(["Year", "Quarter"], axis=1)
-
     return df_dict
 
 
