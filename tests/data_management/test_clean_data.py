@@ -195,7 +195,7 @@ def test_clean_data(tmp_path):
     # Check that data is cleaned as expected
     assert isinstance(cleaned_data_dict, dict)
     assert len(cleaned_data_dict) == len(dfs)
-    assert all([key in cleaned_data_dict for key in dfs])
+    assert all(key in cleaned_data_dict for key in dfs)
     for key, _df in cleaned_data_dict.items():
         assert isinstance(cleaned_data_dict[key]["TIME"][0], pd.Timestamp)
         assert all(cleaned_data_dict["GDP"]["GDP"] == np.log(dfs["GDP"]["GDP"]))
