@@ -15,7 +15,7 @@ def random_data():
     n = 100
     outcome = np.random.normal(size=n)
     features = np.random.normal(size=(n, 3))
-    data = pd.DataFrame(
+    return pd.DataFrame(
         {
             "outcome": outcome,
             "feature1": features[:, 0],
@@ -23,10 +23,9 @@ def random_data():
             "feature3": features[:, 2],
         },
     )
-    return data
 
 
-def test_fit_model_OLS(random_data):
+def test_structure_model(random_data):
     """Tests if result is a 'RegressionResultsWrapper' object with non-zero degrees of
     freedom and correct number of parameters."""
     outcome_var = random_data["outcome"]
@@ -35,6 +34,20 @@ def test_fit_model_OLS(random_data):
     assert isinstance(model, sm.regression.linear_model.RegressionResultsWrapper)
     assert model.df_resid > 0
     assert len(model.params) == feature_vars.shape[1]
+
+
+def test_model_OLS(random_data):
+    """Tests if parameters of function are correct."""
+    feature_vars = random_data[["feature1", "feature2", "feature3"]]
+    outcome_var = (
+        2.00 * random_data["feature1"]
+        + 3.00 * random_data["feature2"]
+        + 4.00 * random_data["feature3"]
+    )
+    model = fit_model(outcome_var, feature_vars, "OLS")
+    assert np.isclose(model.params["feature1"], 2.0, atol=DESIRED_PRECISION)
+    assert np.isclose(model.params["feature2"], 3.0, atol=DESIRED_PRECISION)
+    assert np.isclose(model.params["feature3"], 4.0, atol=DESIRED_PRECISION)
 
 
 def test_fit_model_error_model_type(random_data):
