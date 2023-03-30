@@ -3,22 +3,25 @@
 from nkpc_estimation.config import BLD
 
 _MODELS = ["OLS"]
-_OUTCOME = ["BackExp", "MSC"]
-_FEATURE = ["Unemp", "Unemp_Gap", "Labor_share"]
+_FEATURE_1 = ["Unemp", "Unemp_Gap", "Labor_share"]
+_FEATURE_2 = ["BackExp", "MSC"]
 
 ESTIMATIONS = {
-    f"{outcome_name}_{feature_name}_{model_name}": {
+    f"{feature_name_1}_{feature_name_2}_{model_name}": {
         "model": model_name,
-        "outcome": outcome_name,
-        "feature": feature_name,
+        "feature_1": feature_name_1,
+        "feature_2": feature_name_2,
     }
     for model_name in _MODELS
-    for outcome_name in _OUTCOME
-    for feature_name in _FEATURE
+    for feature_name_1 in _FEATURE_1
+    for feature_name_2 in _FEATURE_2
 }
 
 
-def path_to_estimation_result(outcome_name, feature_name, model_type):
+def path_to_estimation_result(feature_name_1, feature_name_2, model_type):
     return (
-        BLD / "python" / "models" / f"{outcome_name}_{feature_name}_{model_type}.pickle"
+        BLD
+        / "python"
+        / "models"
+        / f"{feature_name_1}_{feature_name_2}_{model_type}.pickle"
     )

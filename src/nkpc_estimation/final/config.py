@@ -1,30 +1,38 @@
 """Configuration of the plots."""
 
-from nkpc_estimation.analysis.config import _FEATURE, _MODELS, _OUTCOME
+from nkpc_estimation.analysis.config import _FEATURE_1, _FEATURE_2, _MODELS
 from nkpc_estimation.config import BLD
 
 PLOTS = {
-    f"{outcome_name}_{feature_name}": {"outcome": outcome_name, "feature": feature_name}
-    for outcome_name in _OUTCOME
-    for feature_name in _FEATURE
+    f"{feature_name_1}_{feature_name_2}": {
+        "feature_1": feature_name_1,
+        "feature_2": feature_name_2,
+    }
+    for feature_name_1 in _FEATURE_1
+    for feature_name_2 in _FEATURE_2
 }
 
 
-def path_to_plots(outcome_name, feature_name):
-    return BLD / "python" / "figures" / f"{outcome_name}_{feature_name}.pdf"
+def path_to_plots(feature_name_1, feature_name_2):
+    return BLD / "python" / "figures" / f"{feature_name_1}_{feature_name_2}.pdf"
 
 
 TABLES = {
-    f"{outcome_name}_{feature_name}_{model_name}": {
+    f"{feature_name_1}_{feature_name_2}_{model_name}": {
         "model": model_name,
-        "outcome": outcome_name,
-        "feature": feature_name,
+        "feature_1": feature_name_1,
+        "feature_2": feature_name_2,
     }
     for model_name in _MODELS
-    for outcome_name in _OUTCOME
-    for feature_name in _FEATURE
+    for feature_name_1 in _FEATURE_1
+    for feature_name_2 in _FEATURE_2
 }
 
 
-def path_to_tables(outcome_name, feature_name, model_type):
-    return BLD / "python" / "tables" / f"{outcome_name}_{feature_name}_{model_type}.tex"
+def path_to_tables(feature_name_1, feature_name_2, model_type):
+    return (
+        BLD
+        / "python"
+        / "tables"
+        / f"{feature_name_1}_{feature_name_2}_{model_type}.tex"
+    )
