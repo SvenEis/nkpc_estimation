@@ -42,20 +42,22 @@ for id_, kwargs in _ID_TO_KWARGS.items():
             Pickle: Saves pickle files in the produces path.
 
         """
-        data = pd.read_csv(depends_on)
-        outcome_vars = {
-            "BackExp": data["Inflation"] - data["Backward_Expectations_Inflation"],
-            "MSC": data["Inflation"] - data["MSC"],
-        }
-        feature_vars = {
+        data = pd.read_csv(depends_on, index_col="TIME")
+        outcome_var = data["Inflation"]
+        feature_vars_1 = {
             "Unemp": data["Unemployment"],
             "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
             "Labor_share": data["Labor_share"],
         }
+        feature_vars_2 = {
+            "BackExp": data["Backward_Expectations_Inflation"],
+            "MSC": data["MSC"],
+        }
         model_type = "OLS"
-        for outcome_name, outcome_var in outcome_vars.items():
-            for feature_name, feature_var in feature_vars.items():
+        for feature_name_1, feature_var_1 in feature_vars_1.items():
+            for feature_name_2, feature_var_2 in feature_vars_2.items():
+                feature_var = list(zip(feature_var_1, feature_var_2))
                 model = fit_model(outcome_var, feature_var, model_type=model_type)
                 model.save(
-                    f"{produces.parent}/{outcome_name}_{feature_name}_{model_type}.pickle",
+                    f"{produces.parent}/{feature_name_1}_{feature_name_2}_{model_type}.pickle",
                 )
