@@ -95,12 +95,12 @@ The paper is organized as follows: the next chapter \ref{theory} describes the t
 \section{Theoretical Foundation} \label{theory}
 The baseline model utilized in this research paper is the Representative Agent New Keynesian (RANK) model. This economic model consists of a continuum of monopolistic intermediate-goods firms, a perfectly competitive final-goods firm, a perfectly competitive representative household, and a central bank responsible for managing monetary policy. The upcoming sections of this paper will provide a detailed explanation of the objectives and constraints of the firm sector. For a complete understanding of the model equations, including the household problem and monetary policy rule, please refer to Appendix \ref{sec:app:model}.
 \subsection{Final-Goods Firm}
-The final-goods firm is a representative, perfect competitive firm which uses intermediate goods as inputs for their production of the following good according to the following technology:
+The final-goods firm is a representative, perfect competitive firm which uses intermediate goods as inputs for their production of the final good according to the following technology:
 \begin{equation}
 	Y_{t} = \left( \int_{0}^{1} Y_{t}(j)^{\frac{\epsilon -1}{\epsilon}} \,dj \right)^{\frac{\epsilon}{\epsilon -1}},
 \end{equation}
 where $Y_{t}(j)$ represents the intermediate good $j$, $Y_{t}$ the final good, and $\epsilon >1$ represents the constant price elasticity of demand.\\
-The firm maximizes its profits subject to (s.t.) the production function, taking intermediate-goods prices and the final-good price as given:
+The firm maximizes its profit subject to (s.t.) the production function, taking intermediate-goods prices and the final-goods price as given:
 \begin{equation*}
 	\begin{aligned}
 		\max_{Y_{t}(j)} \quad & P_{t}Y_{t} = \int_{0}^{1} P_{t}(j)Y_{t}(j) \,dj\\
@@ -134,7 +134,7 @@ As $P_{t}$ may be non-stationary, and in order to perform a log-linearization ar
 \begin{equation} \label{pi}
 	\pi_{t}^{1- \epsilon} = \theta + (1- \theta) \left( \frac{P^{*}_{t}}{P_{t-1}} \right)^{1- \epsilon}
 \end{equation}
-Performing a log-linearization of equation \ref{pi} around $0$ results in the following expression:
+Performing a log-linearization of equation \ref{pi} around zero results in the following expression:
 \begin{equation}
 	p_{t} = \theta p_{t-1} \left( 1- \theta \right) p^{*}_{t}
 \end{equation}
@@ -142,9 +142,10 @@ The dynamic optimization problem faced by the firm for determining the optimal p
 \begin{equation}
 	\begin{aligned}
 	\max_{P^{*}_{t}}  \quad & \sum_{K=0}^{\infty} \theta^{K} E_{t} \left\{ \frac{\Lambda_{t,t+K}}{P_{t+K}} \left[ P_{t}^{*} Y_{t+K \mid t} - \Psi \left( Y_{t+K \mid t} \right) \right] \right\} \\
-	\textrm{s.t.} \quad & Y_{t+K \mid t} = \left( \frac{P^{*}_{t}}{P_{t+K}} \right) Y_{t+K} \\
+	\textrm{s.t.} \quad & Y_{t+K \mid t} = \left( \frac{P^{*}_{t}}{P_{t+K}} \right) Y_{t+K}, \\
 	\end{aligned}
 \end{equation}
+where $\Lambda_{t,t+K}$ is the stochastic discount factor, and $\Psi \left( Y_{t+K \mid t} \right)$ is the nominal cost.\\
 By taking the first-order condition (FOC) and subsequently performing a log-linearization, we arrive at the following expression:
 \begin{equation} \label{pstar}
 	p^{*}_{t} = \mu + \left(1-\beta \theta \right) \sum_{K=0}^{\infty} \left(\theta \beta \right)^{K} E_{t} \psi_{t+K \mid t},
@@ -155,7 +156,7 @@ In order to derive the New Keynesian Phillips Curve (NKPC), it is necessary to r
 \begin{equation} \label{NKPCmu}
 	\pi_{t} = \beta E_{t} \left\{ \pi_{t+1} \right\} - \lambda \hat{\mu}_{t},
 \end{equation}
-where $\hat{\mu}_{t}= \mu_{t}-\mu$ represents the deviation of the markup from its steady state level. By utilizing the log-linearized form of the average real marginal cost, expressed as $mc_{t} = w_{t} - p_{t} - mpn_{t} $, the NKPC can be alternatively presented in terms of the output gap. This results in the following equation, where the logarithmic deviation of the real marginal cost from its steady state level is proportionate to the logarithmic deviation of the output from its flexible price equivalent:
+where $\hat{\mu}_{t}= \mu_{t}-\mu$ represents the deviation of the markup from its steady state level. By utilizing the log-linearized form of the average real marginal cost, which depends on the real wage and the marginal product of labor and is expressed as $mc_{t} = w_{t} - p_{t} - mpn_{t} $, the NKPC can be alternatively presented in terms of the output gap. This results in the following equation, where the logarithmic deviation of the real marginal cost from its steady state level is proportionate to the logarithmic deviation of the output from its flexible price equivalent:
 \begin{equation}
 	\hat{\mu}_{t}= \left[ \sigma + \frac{\phi + \alpha}{1- \alpha} \right] \left( y_{t} - y_{t}^{n} \right)
 \end{equation}
@@ -163,11 +164,12 @@ Combining this with equation \ref{NKPCmu} results in the following expression fo
 \begin{equation}  \label{NKPCygap}
 	\pi_{t} = \beta E_{t} \left\{ \pi_{t+1} \right\} + \kappa \widetilde{y}_{t},
 \end{equation}
-where $\kappa \equiv \lambda \left[ \sigma + \frac{\phi + \alpha}{1- \alpha} \right] $.
-
+where $\kappa \equiv \lambda \left[ \sigma + \frac{\phi + \alpha}{1- \alpha} \right] $ is the slope of the NKPC.
 
 \section{Estimation and Data} \label{estimation}
+The estimation of the NKPC can be achieved in several ways. By looking at the past literature, estimation methods as well as data sources varied a lot. In order to have a complete analysis, I will conduct all the different tools and data which were used before.
 \subsection{Estimation}
+The first estimation method, which will be used as a baseline in this paper, is the ordinary least square (OLS) regression.
 \subsubsection{Coibion and Gorodnichenko (2015)}
 OLS Regression
 
@@ -178,21 +180,86 @@ For the estimation I use quarterly US data from $1960Q1-2022Q4$.
 
 \section{Results and Robustness Checks} \label{results}
 \subsection{Results}
-%\begin{table}[!h]
-%    \input{../bld/python/tables/MSC_Unemp_OLS.tex}
-%    \caption{\label{tab:python-summary}\emph{Python:} Estimation results of the
-%        linear Logistic regression.}
-%\end{table}
 
-%\begin{figure}[H]
+\begin{figure}[ht!]
+	\caption{Estimation results Backward Expectations.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.49\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/GDP_BackExp_OLS.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.49\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_BackExp_OLS.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_BackExp_OLS.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
 
- %   \centering
- %   \includegraphics[width=0.85\textwidth]{../bld/python/figures/MSC_Labor_share.pdf}
+\begin{figure}[ht!]
+	\caption{Estimation results MSC.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.49\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/GDP_MSC_OLS.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_MSC_OLS.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.49\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_MSC_OLS.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_MSC_OLS.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
 
- %   \caption{\emph{Python:} Regression plot.}
- %   \label{fig:python-predictions}
 
-%\end{figure}
+\input{../bld/python/tables/GDP_BackExp_OLS.tex}
+\input{../bld/python/tables/Labor_share_BackExp_OLS.tex}
+\input{../bld/python/tables/Unemp_BackExp_OLS.tex}
+\input{../bld/python/tables/Unemp_Gap_BackExp_OLS.tex}
+\clearpage
+\input{../bld/python/tables/GDP_MSC_OLS.tex}
+\input{../bld/python/tables/Labor_share_MSC_OLS.tex}
+\input{../bld/python/tables/Unemp_MSC_OLS.tex}
+\input{../bld/python/tables/Unemp_Gap_MSC_OLS.tex}
+
 
 \subsection{Robustness Checks}
 
@@ -224,10 +291,379 @@ In the model, I posit the existence of a continuum of a representitive perfectly
 
 \subsection{Market Clearing}
 
+\section{Sensitivity Analysis}
+\subsection{Plots}
 
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis GDP - Backward Expectations.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/GDP_BackExp_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/GDP_BackExp_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/GDP_BackExp_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/GDP_BackExp_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/GDP_BackExp_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis Labor share - Backward Expectations.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis Unemployment - Backward Expectation.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_BackExp_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_BackExp_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_BackExp_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_BackExp_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_BackExp_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis Unemployment Gap - Backward Expectation.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_BackExp_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_BackExp_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_BackExp_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_BackExp_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_BackExp_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis GDP - MSC.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/GDP_MSC_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/GDP_MSC_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/GDP_MSC_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/GDP_MSC_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/GDP_MSC_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis Labor share - MSC.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_MSC_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_MSC_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_MSC_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_MSC_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/Labor_share_MSC_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis Unemployment - MSC.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_MSC_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_MSC_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_MSC_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_MSC_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_MSC_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht!]
+	\caption{Breakpoint analysis Unemployment Gap - MSC.}
+	\label{fig:irf}
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{minipage}{.3\textwidth}
+		\begin{subfigure}{\textwidth}
+		\centering
+			\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_MSC_OLS_1961-04-01.pdf}
+           	\end{subfigure}\\
+	 	\begin{subfigure}{\textwidth}
+            	\centering
+           		\includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_MSC_OLS_1984-10-01.pdf}
+            	\end{subfigure}\\
+	\end{minipage}
+	%\hfill
+        \begin{minipage}{.3\textwidth}
+        	\begin{subfigure}{\textwidth}
+                    \centering
+                       \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_MSC_OLS_2007-07-01.pdf}
+                    \end{subfigure}\\
+            \begin{subfigure}{\textwidth}
+                    \centering
+                    \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_MSC_OLS_2013-01-01.pdf}
+                    \end{subfigure}\\
+        \end{minipage}
+       % \hfill
+        \begin{minipage}{.3\textwidth}
+            \begin{subfigure}{\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{../bld/python/figures/Unemp_Gap_MSC_OLS_2020-04-01.pdf}
+                \end{subfigure}\\
+        \end{minipage}}
+    	\bigskip
+	\begin{minipage}{\textwidth}%
+		\footnotesize\setlength{\baselineskip}{11pt}%
+		\bigskip \textit{Notes:} The above figures show the  to a risk premium shock for specific variables. The ordinate shows the variable's proportional deviation from its steady state value in percent. The abscissa shows the quarters from zero to 40. The red line shows the IRF to a risk premium shock in the model with price level targeting and the blue line shows the IRF in a model with inflation level targeting.
+	\end{minipage}
+\end{figure}
 
 % The chngctr package is needed for the following lines.
 % \counterwithin{table}{section}
 % \counterwithin{figure}{section}
-
+\clearpage
+\subsection{Tables}
+\input{../bld/python/tables/GDP_BackExp_OLS_1961-04-01.tex}
+\input{../bld/python/tables/GDP_BackExp_OLS_1984-10-01.tex}
+\input{../bld/python/tables/GDP_BackExp_OLS_2007-07-01.tex}
+\input{../bld/python/tables/GDP_BackExp_OLS_2013-01-01.tex}
+\input{../bld/python/tables/GDP_BackExp_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/Labor_share_BackExp_OLS_1961-04-01.tex}
+\input{../bld/python/tables/Labor_share_BackExp_OLS_1984-10-01.tex}
+\input{../bld/python/tables/Labor_share_BackExp_OLS_2007-07-01.tex}
+\input{../bld/python/tables/Labor_share_BackExp_OLS_2013-01-01.tex}
+\input{../bld/python/tables/Labor_share_BackExp_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/Unemp_BackExp_OLS_1961-04-01.tex}
+\input{../bld/python/tables/Unemp_BackExp_OLS_1984-10-01.tex}
+\input{../bld/python/tables/Unemp_BackExp_OLS_2007-07-01.tex}
+\input{../bld/python/tables/Unemp_BackExp_OLS_2013-01-01.tex}
+\input{../bld/python/tables/Unemp_BackExp_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/Unemp_Gap_BackExp_OLS_1961-04-01.tex}
+\input{../bld/python/tables/Unemp_Gap_BackExp_OLS_1984-10-01.tex}
+\input{../bld/python/tables/Unemp_Gap_BackExp_OLS_2007-07-01.tex}
+\input{../bld/python/tables/Unemp_Gap_BackExp_OLS_2013-01-01.tex}
+\input{../bld/python/tables/Unemp_Gap_BackExp_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/GDP_MSC_OLS_1961-04-01.tex}
+\input{../bld/python/tables/GDP_MSC_OLS_1984-10-01.tex}
+\input{../bld/python/tables/GDP_MSC_OLS_2007-07-01.tex}
+\input{../bld/python/tables/GDP_MSC_OLS_2013-01-01.tex}
+\input{../bld/python/tables/GDP_MSC_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/Labor_share_MSC_OLS_1961-04-01.tex}
+\input{../bld/python/tables/Labor_share_MSC_OLS_1984-10-01.tex}
+\input{../bld/python/tables/Labor_share_MSC_OLS_2007-07-01.tex}
+\input{../bld/python/tables/Labor_share_MSC_OLS_2013-01-01.tex}
+\input{../bld/python/tables/Labor_share_MSC_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/Unemp_MSC_OLS_1961-04-01.tex}
+\input{../bld/python/tables/Unemp_MSC_OLS_1984-10-01.tex}
+\input{../bld/python/tables/Unemp_MSC_OLS_2007-07-01.tex}
+\input{../bld/python/tables/Unemp_MSC_OLS_2013-01-01.tex}
+\input{../bld/python/tables/Unemp_MSC_OLS_2020-04-01.tex}
+\clearpage
+\input{../bld/python/tables/Unemp_Gap_MSC_OLS_1961-04-01.tex}
+\input{../bld/python/tables/Unemp_Gap_MSC_OLS_1984-10-01.tex}
+\input{../bld/python/tables/Unemp_Gap_MSC_OLS_2007-07-01.tex}
+\input{../bld/python/tables/Unemp_Gap_MSC_OLS_2013-01-01.tex}
+\input{../bld/python/tables/Unemp_Gap_MSC_OLS_2020-04-01.tex}
 \end{document}

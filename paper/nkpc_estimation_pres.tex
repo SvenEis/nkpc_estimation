@@ -23,7 +23,7 @@
 \AtBeginDocument{\toggletrue{blx@useprefix}}
 \AtBeginBibliography{\togglefalse{blx@useprefix}}
 \setlength{\bibitemsep}{1.5ex}
-\addbibresource{refs.bib}
+\addbibresource{../paper/refs.bib}
 
 \hypersetup{colorlinks=true, linkcolor=black, anchorcolor=black, citecolor=black, filecolor=black, menucolor=black, runcolor=black, urlcolor=black}
 
@@ -48,30 +48,15 @@
     \note{~}
 \end{frame}
 
-
-\begin{frame}[t]
-    \frametitle{heading here}
-    \begin{itemize}
-        \item<+-> Please cite this template as: \citet{GaudeckerEconProjectTemplates}
-        \item<+-> Example data is taken from \url{https://www.stem.org.uk/resources/elibrary/resource/28452/large-datasets-stats4schools}
-    \end{itemize}
-    \note{~}
-\end{frame}
-
-
-
 \begin{frame}[t]
     \begin{figure}[H]
-
         \centering
-        \includegraphics[width=0.5\textwidth]{../python/figures/smoking_by_marital_status}
-
-        \caption{\emph{Python:} Model predictions of the smoking probability over the
-            lifetime. Each colored line represents a case where marital status is fixed to
-            one of the values present in the data set.}
-        \label{fig:python-predictions}
-
+        \includegraphics[width=0.5\textwidth]{../bld/python/figures/Labor_share_BackExp_OLS_1961-04-01.pdf}
     \end{figure}
+\end{frame}
+
+\begin{frame}[t]
+    \input{../bld/python/tables/GDP_BackExp_OLS_1961-04-01.tex}
 \end{frame}
 
 
