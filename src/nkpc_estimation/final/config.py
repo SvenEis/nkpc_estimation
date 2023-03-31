@@ -1,5 +1,7 @@
 """Configuration of the plots."""
 
+import pathlib
+
 from nkpc_estimation.analysis.config import _DATES, _FEATURE_1, _FEATURE_2, _MODELS
 from nkpc_estimation.config import BLD
 
@@ -27,25 +29,6 @@ PLOTS_SENSITIVITY = {
     for date in _DATES
 }
 
-
-def path_to_plots(feature_name_1, feature_name_2, model_type):
-    return (
-        BLD
-        / "python"
-        / "figures"
-        / f"{feature_name_1}_{feature_name_2}_{model_type}.pdf"
-    )
-
-
-def path_to_sensitivity_plots(feature_name_1, feature_name_2, model_type, date):
-    return (
-        BLD
-        / "python"
-        / "figures"
-        / f"{feature_name_1}_{feature_name_2}_{model_type}_{date}.pdf"
-    )
-
-
 TABLES = {
     f"{feature_name_1}_{feature_name_2}_{model_name}": {
         "model": model_name,
@@ -71,7 +54,72 @@ TABLES_SENSITIVITY = {
 }
 
 
-def path_to_tables(feature_name_1, feature_name_2, model_type):
+def path_to_plots(
+    feature_name_1: str,
+    feature_name_2: str,
+    model_type: str,
+) -> pathlib.PosixPath:
+    """Create the paths for the plots.
+
+    Args:
+        feature_name_1 (str): The name of the first independent variable.
+        feature_name_2 (str): The name of the second independent variable.
+        model_type (str): The name of the estimation method.
+
+    Returns:
+        pathlib.PosixPath: The path for the estimation results.
+
+    """
+    return (
+        BLD
+        / "python"
+        / "figures"
+        / f"{feature_name_1}_{feature_name_2}_{model_type}.pdf"
+    )
+
+
+def path_to_sensitivity_plots(
+    feature_name_1: str,
+    feature_name_2: str,
+    model_type: str,
+    date: str,
+) -> pathlib.PosixPath:
+    """Create the paths for the plots of then sensitivity analysis.
+
+    Args:
+        feature_name_1 (str): The name of the first independent variable.
+        feature_name_2 (str): The name of the second independent variable.
+        model_type (str): The name of the estimation method.
+        date (str): The date of the breakpoint.
+
+    Returns:
+        pathlib.PosixPath: The path for the tables.
+
+    """
+    return (
+        BLD
+        / "python"
+        / "figures"
+        / f"{feature_name_1}_{feature_name_2}_{model_type}_{date}.pdf"
+    )
+
+
+def path_to_tables(
+    feature_name_1: str,
+    feature_name_2: str,
+    model_type: str,
+) -> pathlib.PosixPath:
+    """Create the paths for the tables.
+
+    Args:
+        feature_name_1 (str): The name of the first independent variable.
+        feature_name_2 (str): The name of the second independent variable.
+        model_type (str): The name of the estimation method.
+
+    Returns:
+        pathlib.PosixPath: The path for the estimation results.
+
+    """
     return (
         BLD
         / "python"
@@ -80,7 +128,24 @@ def path_to_tables(feature_name_1, feature_name_2, model_type):
     )
 
 
-def path_to_sensitivity_tables(feature_name_1, feature_name_2, model_type, date):
+def path_to_sensitivity_tables(
+    feature_name_1: str,
+    feature_name_2: str,
+    model_type: str,
+    date: str,
+) -> pathlib.PosixPath:
+    """Create the paths for the tables of then sensitivity analysis.
+
+    Args:
+        feature_name_1 (str): The name of the first independent variable.
+        feature_name_2 (str): The name of the second independent variable.
+        model_type (str): The name of the estimation method.
+        date (str): The date of the breakpoint.
+
+    Returns:
+        pathlib.PosixPath: The path for the tables.
+
+    """
     return (
         BLD
         / "python"
