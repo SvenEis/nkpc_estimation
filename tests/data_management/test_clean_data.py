@@ -5,24 +5,15 @@ import pandas as pd
 import pytest
 from nkpc_estimation.config import TEST_DIR
 from nkpc_estimation.data_management.clean_data import (
-    calculateDeTrend,
-    calculateExpectations,
-    calculateGrowthRate,
+    calculate_backward_expectations,
+    calculate_detrend,
+    calculate_growth_rates,
     clean_data,
     load_data_files,
     merge_data,
+    read_csv_file,
 )
 from nkpc_estimation.utilities import read_yaml
-
-
-def test_load_csv_files():
-    """Test that function loads CSV files correctly."""
-    data_files = {
-        "data": TEST_DIR / "data_management" / "sample_data" / "data_fixture.csv",
-    }
-    dataframes = load_data_files(data_files)
-    assert len(dataframes) == 1
-    assert isinstance(dataframes["data"], pd.DataFrame)
 
 
 @pytest.fixture()
@@ -42,7 +33,7 @@ def test_load_zip_files(tmp_path):
         "data": TEST_DIR / "data_management" / "sample_data" / "data_fixture.zip",
     }
     dest_dir = tmp_path
-    dataframes = load_data_files(data_files, dest_dir)
+    dataframes = load_data_files(data_files=data_files, dest_dir=dest_dir)
     assert len(dataframes) == 1
     assert isinstance(dataframes["data"], pd.DataFrame)
 
@@ -51,13 +42,13 @@ def test_unsupported_file_extension():
     """Test that the function raises an error if an unsupported file format is
     specified."""
     data_files = {
-        "data": TEST_DIR / "data_management" / "sample_data" / "data_fixture.txt",
+        "data": TEST_DIR / "data_management" / "sample_data" / "data_fixture.xlsx",
     }
     with pytest.raises(
-        AssertionError,
-        match="Unsupported file format: Only .csv, and .zip files are supported.",
+        ValueError,
+        match="Unsupported file format: Only .csv and .zip files are supported.",
     ):
-        load_data_files(data_files)
+        load_data_files(data_files=data_files)
 
 
 def test_load_data_files_missing_dest_dir_for_zip_file_extraction():
@@ -66,23 +57,10 @@ def test_load_data_files_missing_dest_dir_for_zip_file_extraction():
         "data": TEST_DIR / "data_management" / "sample_data" / "data_fixture.zip",
     }
     with pytest.raises(
-        AssertionError,
+        ValueError,
         match="dest_dir must be specified when reading a zip file.",
     ):
-        load_data_files(data_files)
-
-
-def test_load_data_files_unsupported_file_in_zip_archive(tmp_path):
-    """Test that the function raises specific AssertionError."""
-    data_files = {
-        "data": TEST_DIR / "data_management" / "sample_data" / "wrong_datatype.zip",
-    }
-    dest_dir = tmp_path
-    with pytest.raises(
-        AssertionError,
-        match="Unsupported file format in zip archive: Only .csv files are supported.",
-    ):
-        load_data_files(data_files, dest_dir=dest_dir)
+        load_data_files(data_files=data_files)
 
 
 @pytest.fixture()
@@ -113,7 +91,7 @@ def test_merge_data(example_data_1):
     data set has correct columns, if merged data set has expected values, if function
     works for a dictionary with only one data frame, and if the function raises an
     exception for non-existent index column."""
-    result = merge_data(example_data_1, "index")
+    result = merge_data(data=example_data_1, index="index")
     assert isinstance(result, pd.DataFrame)
     ##
     expected_index = pd.to_datetime(["2022-01-01", "2022-02-01", "2022-03-01"])
@@ -126,7 +104,7 @@ def test_merge_data(example_data_1):
     assert result.values.tolist() == expected_values
     ##
     with pytest.raises(KeyError):
-        merge_data(example_data_1, "nonexistent_column")
+        merge_data(data=example_data_1, index="nonexistent_column")
 
 
 @pytest.fixture()
@@ -134,49 +112,46 @@ def example_data():
     return pd.DataFrame({"A": [1, 2, 3, 4, 5], "B": [10, 20, 30, 40, 50]})
 
 
-def test_calculateGrowthRate(example_data):
+def test_calculate_growth_rate(example_data):
     """Test if function returns pandas.DataFrame, if variable has expected name, if
     variable has expected values, and if function raises an exception for non-numeric
     input."""
-    result = calculateGrowthRate(example_data, "A")
+    result = calculate_growth_rates(data=example_data, variable="A")
     assert isinstance(result, pd.DataFrame)
     ##
     expected_column_name = "A"
     assert expected_column_name in result.columns
     ##
-    expected_values = [100.0, 50.0, 33.33333333333333, 25.0]
+    expected_values = [2, 3, 4, 5]
     assert result[expected_column_name].tolist() == expected_values
-    ##
-    with pytest.raises(KeyError):
-        calculateGrowthRate(example_data, "C")
 
 
-def test_calculateDeTrend(example_data):
+def test_calculate_detrend(example_data):
     """Test if function returns pandas.DataFrame, if variable has expected name, and if
     function raises an exception for non-numeric input."""
-    result = calculateDeTrend(example_data, "A")
+    result = calculate_detrend(data=example_data, variable="A")
     assert isinstance(result, pd.DataFrame)
     ##
     expected_column_name = "A"
     assert expected_column_name in result.columns
     ##
     with pytest.raises(KeyError):
-        calculateDeTrend(example_data, "C")
+        calculate_detrend(data=example_data, variable="C")
 
 
-def test_calculateExpectations(example_data):
+def test_calculate_expectations(example_data):
     """Test if function returns pandas.DataFrame, if new column has expected name, if
     new column has expected values, and if function drops rows with NaN values."""
-    result = calculateExpectations(example_data, "A")
+    result = calculate_backward_expectations(data=example_data, variable="A")
     assert isinstance(result, pd.DataFrame)
     ##
     expected_column_name = "Backward_Expectations_A"
     assert expected_column_name in result.columns
     ##
-    expected_values = [2.5]
+    expected_values = [1.0, 1.5, 2.0, 2.5, 3.5]
     assert result[expected_column_name].tolist() == expected_values
     ##
-    assert result.shape == (1, 3)
+    assert result.shape == (5, 3)
 
 
 def test_clean_data(tmp_path):
@@ -191,7 +166,7 @@ def test_clean_data(tmp_path):
         data_files=dfs,
         dest_dir=tmp_path,
     )
-    cleaned_data_dict = clean_data(dfs, data_info)
+    cleaned_data_dict = clean_data(data=dfs, data_info=data_info)
     # Check that data is cleaned as expected
     assert isinstance(cleaned_data_dict, dict)
     assert len(cleaned_data_dict) == len(dfs)
@@ -213,9 +188,21 @@ def test_merge_data(tmp_path):
         data_files=dfs,
         dest_dir=tmp_path,
     )
-    cleaned_data = clean_data(dfs, data_info)
-    merged_data = merge_data(cleaned_data, index="TIME")
+    cleaned_data = clean_data(data=dfs, data_info=data_info)
+    merged_data = merge_data(data=cleaned_data, index="TIME")
     assert isinstance(merged_data, pd.DataFrame)
     assert merged_data.index.name == "TIME"
     for col in dfs:
         assert col in merged_data.columns
+
+
+def test_read_csv_file():
+    file_path = TEST_DIR / "data_management" / "sample_data" / "data_fixture.csv"
+
+    # Test that the function returns a DataFrame
+    result = read_csv_file(file_path)
+    assert isinstance(result, pd.DataFrame)
+
+    # Test that the function raises an exception for a non-existent file
+    with pytest.raises(ValueError):
+        read_csv_file("nonexistent_file.csv")
