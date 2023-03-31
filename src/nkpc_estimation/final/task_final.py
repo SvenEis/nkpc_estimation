@@ -24,13 +24,13 @@ from nkpc_estimation.final.config import (
 
 
 def _create_plot_parametrization(plots):
-    """Create pytask parametrization for plotting.
+    """Create parametrization for pytask.
 
     Args:
-        plots
+        plots (dict): A dictionary with the configuration to create the parametrization.
 
     Returns:
-        statsmodels.base.model.Results: The fitted model.
+        dict: A dictionary with the dependencies, model, and information where the output is saved.
 
     """
     id_to_kwargs = {}
@@ -63,6 +63,17 @@ for id_, kwargs in _ID_TO_KWARGS.items():
 
     @pytask.mark.task(id=id_, kwargs=kwargs)
     def task_plot_regression(depends_on, model, produces):
+        """Plot a 3D scatter plot with a plane for the OLS fit.
+
+        Args:
+            depends_on (dict): Dependencies for the pytask function.
+            model (str): The name of the regression method.
+            produces (Path): Path where the outcome is saved.
+
+        Returns:
+            Pdf: Saves a pdf file in the produces path.
+
+        """
         data = pd.read_csv(depends_on["data"])
         outcome_var = data["Inflation"]
         feature_vars_1 = {
@@ -108,13 +119,13 @@ for id_, kwargs in _ID_TO_KWARGS.items():
 
 
 def _create_sensitivity_plot_parametrization(plots_sensitivity):
-    """Create pytask parametrization for plotting.
+    """Create parametrization for pytask.
 
     Args:
-        plots
+        plots_sensitivity (dict): A dictionary with the configuration to create the parametrization.
 
     Returns:
-        statsmodels.base.model.Results: The fitted model.
+        dict: A dictionary with the dependencies, model, and information where the output is saved.
 
     """
     id_to_kwargs = {}
@@ -149,6 +160,17 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
 
     @pytask.mark.task(id=id_, kwargs=kwargs)
     def task_sensitivity_plot_regression(depends_on, model, produces):
+        """Plot a 3D scatter plot with a plane for the OLS fit.
+
+        Args:
+            depends_on (dict): Dependencies for the pytask function.
+            model (str): The name of the regression method.
+            produces (Path): Path where the outcome is saved.
+
+        Returns:
+            Pdf: Saves a pdf file in the produces path.
+
+        """
         data = pd.read_csv(depends_on["data"])
         outcome_var = data["Inflation"]
         feature_vars_1 = {
@@ -192,6 +214,15 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
 
 
 def _create_table_parametrization(tables):
+    """Create parametrization for pytask.
+
+    Args:
+        tables (dict): A dictionary with the configuration to create the parametrization.
+
+    Returns:
+        dict: A dictionary with the dependencies, model, and information where the output is saved.
+
+    """
     id_to_kwargs = {}
     for name, config in tables.items():
         depends_on = path_to_estimation_result(
@@ -219,15 +250,15 @@ for id_, kwargs in _ID_TO_KWARGS.items():
 
     @pytask.mark.task(id=id_, kwargs=kwargs)
     def task_create_results_table_python(depends_on, model, produces):
-        """Create TeX tables of estimation results.
+        """Create a table with the regression results.
 
         Args:
-            depends_on: Dependencies for the pytask function.
-            model:
-            produces: Path where the outcome is saved.
+            depends_on (dict): Dependencies for the pytask function.
+            model (str): The name of the regression method.
+            produces (Path): Path where the outcome is saved.
 
         Returns:
-            latex table: A latex table with the regression results.
+            Latex table: Saves a tex file in the produces path.
 
         """
         model = load_model(depends_on)
@@ -237,6 +268,15 @@ for id_, kwargs in _ID_TO_KWARGS.items():
 
 
 def _create_table_sensitivity_parametrization(tables_sensitivity):
+    """Create parametrization for pytask.
+
+    Args:
+        tables_sensitivity (dict): A dictionary with the configuration to create the parametrization.
+
+    Returns:
+        dict: A dictionary with the dependencies, model, and information where the output is saved.
+
+    """
     id_to_kwargs = {}
     for name, config in tables_sensitivity.items():
         depends_on = path_to_sensitivity_result(
@@ -268,15 +308,15 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
 
     @pytask.mark.task(id=id_, kwargs=kwargs)
     def task_create_results_sensitivity_table_python(depends_on, model, produces):
-        """Create TeX tables of estimation results.
+        """Create a table with the regression results.
 
         Args:
-            depends_on: Dependencies for the pytask function.
-            model:
-            produces: Path where the outcome is saved.
+            depends_on (dict): Dependencies for the pytask function.
+            model (str): The name of the regression method.
+            produces (Path): Path where the outcome is saved.
 
         Returns:
-            latex table: A latex table with the regression results.
+            Latex table: Saves a tex file in the produces path.
 
         """
         model = load_model(depends_on)

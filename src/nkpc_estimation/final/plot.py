@@ -1,17 +1,29 @@
 """Functions plotting results."""
 
 import numpy as np
+import pandas as pd
+import plotly
 import plotly.graph_objs as go
+import statsmodels
 
 
-def plot_regression(model, x1, x2, y, x1axis_title, x2axis_title, yaxis_title):
+def plot_regression(
+    model: statsmodels.base.model.Results,
+    x1: pd.Series,
+    x2: pd.Series,
+    y: pd.Series,
+    x1axis_title: str,
+    x2axis_title: str,
+    yaxis_title: str,
+    title: str = None,
+) -> plotly.scatter.Figure:
     """Plot regression results.
 
     Args:
         model (statsmodels.base.model.Results): The fitted model.
-        x1: variable for x-axis.
-        x2: variable for y-axis.
-        y: variable for z-axis.
+        x1 (pandas.Series): variable for x-axis.
+        x2 (pandas.Series): variable for y-axis.
+        y (pandas.Series): variable for z-axis.
         x1axis_title (str): title of x-axis.
         x2axis_title (str): title of y-axis.
         yaxis_title (str): title of z-axis.
@@ -29,6 +41,7 @@ def plot_regression(model, x1, x2, y, x1axis_title, x2axis_title, yaxis_title):
     zz = model.predict(np.column_stack((xx.flatten(), yy.flatten()))).reshape(xx.shape)
     fig.add_trace(go.Surface(x=xx, y=yy, z=zz))
     fig.update_layout(
+        title=title,
         scene={
             "xaxis": {
                 "backgroundcolor": "rgb(200, 200, 230)",
