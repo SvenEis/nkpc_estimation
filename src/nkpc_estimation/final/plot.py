@@ -16,7 +16,7 @@ def plot_regression(
     x2axis_title: str,
     yaxis_title: str,
     title: str = None,
-) -> plotly.scatter.Figure:
+) -> plotly.graph_objects.Scatter:
     """Plot regression results.
 
     Args:
@@ -29,7 +29,7 @@ def plot_regression(
         yaxis_title (str): title of z-axis.
 
     Returns:
-        plotly.scatter.Figure: The figure.
+        plotly.graph_objects.Scatter: The figure.
 
     """
     fig = go.Figure(
@@ -39,7 +39,7 @@ def plot_regression(
     y_range = np.linspace(x2.min(), x2.max(), 20)
     xx, yy = np.meshgrid(x_range, y_range)
     zz = model.predict(np.column_stack((xx.flatten(), yy.flatten()))).reshape(xx.shape)
-    fig.add_trace(go.Surface(x=xx, y=yy, z=zz))
+    fig.add_trace(go.Surface(x=xx, y=yy, z=zz, showlegend=False))
     fig.update_layout(
         title=title,
         scene={
