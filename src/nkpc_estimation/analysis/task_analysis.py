@@ -54,6 +54,7 @@ for id_, kwargs in _ID_TO_KWARGS.items():
             "Unemp": data["Unemployment"],
             "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
             "Labor_share": data["Labor_share"],
+            "GDP": data["GDP"],
         }
         feature_vars_2 = {
             "BackExp": data["Backward_Expectations_Inflation"],
@@ -110,6 +111,7 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
             "Unemp": data["Unemployment"],
             "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
             "Labor_share": data["Labor_share"],
+            "GDP": data["GDP"],
         }
         feature_vars_2 = {
             "BackExp": data["Backward_Expectations_Inflation"],
@@ -140,6 +142,7 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
                 "Unemp_Gap": data_break_point["Unemployment"]
                 - data_break_point["NAIRU"],
                 "Labor_share": data_break_point["Labor_share"],
+                "GDP": data_break_point["GDP"],
             }
             feature_vars_2 = {
                 "BackExp": data_break_point["Backward_Expectations_Inflation"],

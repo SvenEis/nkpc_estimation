@@ -3,7 +3,7 @@
 from nkpc_estimation.config import BLD
 
 _MODELS = ["OLS"]
-_FEATURE_1 = ["Unemp", "Unemp_Gap", "Labor_share"]
+_FEATURE_1 = ["Unemp", "Unemp_Gap", "Labor_share", "GDP"]
 _FEATURE_2 = ["BackExp", "MSC"]
 _DATES = ["1961-04-01", "1984-10-01", "2007-07-01", "2013-01-01", "2020-04-01"]
 

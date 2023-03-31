@@ -69,6 +69,7 @@ for id_, kwargs in _ID_TO_KWARGS.items():
             "Unemp": data["Unemployment"],
             "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
             "Labor_share": data["Labor_share"],
+            "GDP": data["GDP"],
         }
         feature_vars_2 = {
             "BackExp": data["Backward_Expectations_Inflation"],
@@ -79,6 +80,7 @@ for id_, kwargs in _ID_TO_KWARGS.items():
             "Unemp": "Unemployment Rate (in %)",
             "Unemp_Gap": "Unemployment Gap (in %)",
             "Labor_share": "NFB Labor Income Share (in %)",
+            "GDP": "Detrended log GDP",
         }
 
         x2axis_titles = {
@@ -153,6 +155,7 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
             "Unemp": data["Unemployment"],
             "Unemp_Gap": data["Unemployment"] - data["NAIRU"],
             "Labor_share": data["Labor_share"],
+            "GDP": data["GDP"],
         }
         feature_vars_2 = {
             "BackExp": data["Backward_Expectations_Inflation"],
@@ -163,6 +166,7 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
             "Unemp": "Unemployment Rate (in %)",
             "Unemp_Gap": "Unemployment Gap (in %)",
             "Labor_share": "NFB Labor Income Share (in %)",
+            "GDP": "Detrended log GDP",
         }
 
         x2axis_titles = {
