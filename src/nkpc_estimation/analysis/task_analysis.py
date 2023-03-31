@@ -15,6 +15,15 @@ from nkpc_estimation.config import BLD
 
 
 def _create_parametrization(estimations):
+    """Create parametrization for pytask.
+
+    Args:
+        estimations (dict): A dictionary with the configuration to create the parametrization.
+
+    Returns:
+        dict: A dictionary with the dependencies, model, and information where the output is saved.
+
+    """
     id_to_kwargs = {}
     depends_on = BLD / "python" / "data" / "data_clean.csv"
     for name, config in estimations.items():
@@ -61,16 +70,29 @@ for id_, kwargs in _ID_TO_KWARGS.items():
             "MSC": data["MSC"],
         }
         model_type = "OLS"
-        for feature_name_1, feature_var_1 in feature_vars_1.items():
-            for feature_name_2, feature_var_2 in feature_vars_2.items():
-                feature_var = list(zip(feature_var_1, feature_var_2))
-                model = fit_model(outcome_var, feature_var, model_type=model_type)
-                model.save(
-                    f"{produces.parent}/{feature_name_1}_{feature_name_2}_{model_type}.pickle",
-                )
+        models = fit_model(
+            outcome_var,
+            feature_vars_1,
+            feature_vars_2,
+            model_type=model_type,
+        )
+        for model_key, model_value in models.items():
+            feature_name_1, feature_name_2 = model_key.split(", ")
+            model_value.save(
+                f"{produces.parent}/{feature_name_1}_{feature_name_2}_{model_type}.pickle",
+            )
 
 
 def _create_parametrization_sensitivity(sensitivity):
+    """Create parametrization for pytask.
+
+    Args:
+        sensitivity (dict): A dictionary with the configuration to create the parametrization.
+
+    Returns:
+        dict: A dictionary with the dependencies, model, and information where the output is saved.
+
+    """
     id_to_kwargs = {}
     depends_on = BLD / "python" / "data" / "data_clean.csv"
     for name, config in sensitivity.items():
@@ -118,13 +140,11 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
             "MSC": data["MSC"],
         }
 
-        dates = ["1984-10-01", "2007-07-01", "2013-01-01", "2020-04-01"]
-
+        break_points = ["1984-10-01", "2007-07-01", "2013-01-01", "2020-04-01"]
         model_type = "OLS"
-
         combined_dict = feature_vars_1 | feature_vars_2
 
-        break_point_analysis(data, outcome_var, combined_dict, dates)
+        break_point_analysis(data, outcome_var, combined_dict, break_points)
 
         dates_ols = [
             "1961-04-01",
@@ -148,10 +168,15 @@ for id_, kwargs in _ID_TO_KWARGS_SENSITIVITY.items():
                 "BackExp": data_break_point["Backward_Expectations_Inflation"],
                 "MSC": data_break_point["MSC"],
             }
-            for feature_name_1, feature_var_1 in feature_vars_1.items():
-                for feature_name_2, feature_var_2 in feature_vars_2.items():
-                    feature_var = list(zip(feature_var_1, feature_var_2))
-                    model = fit_model(outcome_var, feature_var, model_type=model_type)
-                    model.save(
-                        f"{produces.parent}/{feature_name_1}_{feature_name_2}_{model_type}_sensitivity_{date}.pickle",
-                    )
+
+            models = fit_model(
+                outcome_var,
+                feature_vars_1,
+                feature_vars_2,
+                model_type=model_type,
+            )
+            for model_key, model_value in models.items():
+                feature_name_1, feature_name_2 = model_key.split(", ")
+                model_value.save(
+                    f"{produces.parent}/{feature_name_1}_{feature_name_2}_{model_type}_sensitivity_{date}.pickle",
+                )

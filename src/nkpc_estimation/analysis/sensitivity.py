@@ -1,19 +1,26 @@
 """Functions for the sensitivity analysis of the regression model."""
 
+
 import chow_test as ct
+import pandas as pd
 
 
-def break_point_analysis(data, outcome_variable, feature_variables, dates):
-    """Test for break point and fit model to data.
+def break_point_analysis(
+    data: pd.DataFrame,
+    outcome_variable: pd.Series,
+    feature_variables: list[pd.Series],
+    dates: list[str | pd.Timestamp],
+) -> dict[str, dict[str | pd.Timestamp, float]]:
+    """Test for possible breakpoints.
 
     Args:
         data (pandas.DataFrame): The data set.
-        outcome_variable: The outcome variable of the regression.
+        outcome_variable (pandas.Series): The outcome variable of the regression.
         feature_variables (list): A list of feature variables for the regression.
         dates (list): A list of break point dates.
 
     Returns:
-        statsmodels.base.model.Results: The fitted model.
+        dict: A dictionary with p-values of a Chow test.
 
     """
     pvalues = {}
