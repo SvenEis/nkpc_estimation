@@ -1,6 +1,5 @@
 """Functions for fitting the regression model."""
 
-
 import pandas as pd
 import statsmodels
 import statsmodels.api as sm
@@ -31,7 +30,7 @@ def fit_model(
     models = {}
     for feature_name_1, feature_var_1 in feature_vars_1.items():
         for feature_name_2, feature_var_2 in feature_vars_2.items():
-            feature_var = list(zip(feature_var_1, feature_var_2))
+            feature_var = list(zip(feature_var_1, feature_var_2, strict=False))
             model = sm.OLS(outcome_variable, feature_var).fit()
             BG_pvalue = acorr_breusch_godfrey(model, nlags=4, store=False)[1]
             BP_pvalue = het_breuschpagan(model.resid, feature_var)[1]

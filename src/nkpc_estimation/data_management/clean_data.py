@@ -90,7 +90,7 @@ def read_csv_file(file_path: str) -> pd.DataFrame:
             else:
                 break
         except Exception as e:
-            raise ValueError(f"Error reading csv file {file_path}: {str(e)}") from e
+            raise ValueError(f"Error reading csv file {file_path}: {e!s}") from e
     return df
 
 
