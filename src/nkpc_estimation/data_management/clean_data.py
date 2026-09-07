@@ -90,7 +90,7 @@ def read_csv_file(file_path: str) -> pd.DataFrame:
             else:
                 break
         except Exception as e:
-            raise ValueError(f"Error reading csv file {file_path}: {str(e)}") from e
+            raise ValueError(f"Error reading csv file {file_path}: {e!s}") from e
     return df
 
 
@@ -98,8 +98,9 @@ def clean_data(
     data: dict[str, pd.DataFrame],
     data_info: dict[str, any],
 ) -> dict[str, pd.DataFrame]:
-    """Clean data set. Information on data columns is stored in
-    ``data_management/data_info.yaml``.
+    """Clean data set.
+
+    Information on data columns is stored in ``data_management/data_info.yaml``.
 
     Args:
         data: The data set.
@@ -121,7 +122,7 @@ def clean_data(
     }
 
     for key, _value in df_dict.items():
-        rename_dict = {col: key for col in data_info["variables_to_keep"]}
+        rename_dict = dict.fromkeys(data_info["variables_to_keep"], key)
         df_dict[key] = _value.rename(columns=rename_dict)
         for date_col in data_info["dates_to_keep"]:
             if (date_col in _value.columns) and date_col in ("DATE", "date"):
