@@ -1,9 +1,11 @@
 """Tasks for compiling the paper and presentation(s)."""
+
 import shutil
 
 import pytask
-from nkpc_estimation.config import BLD, PAPER_DIR
 from pytask_latex import compilation_steps as cs
+
+from nkpc_estimation.config import BLD, PAPER_DIR
 
 documents = ["nkpc_estimation", "nkpc_estimation_pres"]
 
@@ -19,7 +21,6 @@ for document in documents:
     @pytask.mark.task(id=document)
     def task_compile_document():
         """Compile the document specified in the latex decorator."""
-
     kwargs = {
         "depends_on": BLD / "latex" / f"{document}.pdf",
         "produces": BLD.parent.resolve() / f"{document}.pdf",

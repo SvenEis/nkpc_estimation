@@ -1,6 +1,7 @@
 """Tests for the sensitivity analysis."""
 
 import pandas as pd
+
 from nkpc_estimation.analysis.sensitivity import break_point_analysis
 
 

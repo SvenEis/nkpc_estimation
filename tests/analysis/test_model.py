@@ -3,12 +3,13 @@
 import numpy as np
 import pandas as pd
 import pytest
+
 from nkpc_estimation.analysis.model import fit_model
 
 DESIRED_PRECISION = 10e-2
 
 
-@pytest.fixture()
+@pytest.fixture
 def random_data():
     np.random.seed(123)
     n = 100
