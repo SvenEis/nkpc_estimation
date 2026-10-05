@@ -1,6 +1,5 @@
 """Functions for fitting the regression model."""
 
-
 import pandas as pd
 import statsmodels
 import statsmodels.api as sm
