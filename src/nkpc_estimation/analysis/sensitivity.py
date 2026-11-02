@@ -1,6 +1,5 @@
 """Functions for the sensitivity analysis of the regression model."""
 
-
 import chow_test as ct
 import pandas as pd
 

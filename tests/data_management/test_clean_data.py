@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+
 from nkpc_estimation.config import TEST_DIR
 from nkpc_estimation.data_management.clean_data import (
     calculate_backward_expectations,
@@ -16,7 +17,7 @@ from nkpc_estimation.data_management.clean_data import (
 from nkpc_estimation.utilities import read_yaml
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup():
     out = {
         "data_files": {
@@ -63,7 +64,7 @@ def test_load_data_files_missing_dest_dir_for_zip_file_extraction():
         load_data_files(data_files=data_files)
 
 
-@pytest.fixture()
+@pytest.fixture
 def example_data_1():
     data1 = pd.DataFrame(
         {
@@ -107,7 +108,7 @@ def test_merge_data(example_data_1):
         merge_data(data=example_data_1, index="nonexistent_column")
 
 
-@pytest.fixture()
+@pytest.fixture
 def example_data():
     return pd.DataFrame({"A": [1, 2, 3, 4, 5], "B": [10, 20, 30, 40, 50]})
 
@@ -172,7 +173,7 @@ def test_clean_data(tmp_path):
     assert len(cleaned_data_dict) == len(dfs)
     assert all(key in cleaned_data_dict for key in dfs)
     for key, _df in cleaned_data_dict.items():
-        assert isinstance(cleaned_data_dict[key]["TIME"][0], pd.Timestamp)
+        assert isinstance(_df["TIME"][0], pd.Timestamp)
         assert all(cleaned_data_dict["GDP"]["GDP"] == np.log(dfs["GDP"]["GDP"]))
 
 
